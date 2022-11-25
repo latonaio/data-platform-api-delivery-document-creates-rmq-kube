@@ -1,8 +1,9 @@
 package requests
 
 type HeaderPartner struct {
+	DeliveryDocument        *int   `json:"DeliveryDocument"`
 	PartnerFunction         string `json:"PartnerFunction"`
-	BusinessPartner         int    `json:"BusinessPartner"`
+	BusinessPartner         *int   `json:"BusinessPartner"`
 	BusinessPartnerFullName string `json:"BusinessPartnerFullName"`
 	BusinessPartnerName     string `json:"BusinessPartnerName"`
 	Organization            string `json:"Organization"`
@@ -10,5 +11,5 @@ type HeaderPartner struct {
 	Language                string `json:"Language"`
 	Currency                string `json:"Currency"`
 	ExternalDocumentID      string `json:"ExternalDocumentID"`
-	AddressID               int    `json:"AddressID"`
+	AddressID               *int   `json:"AddressID"`
 }

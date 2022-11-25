@@ -9,12 +9,12 @@ spec:
   selector:
     matchLabels:
       run: data-platform-api-delivery-document-creates-rmq-kube
-      app: ORDERS
+      app: DELIVERY_DOCUMENT
   template:
     metadata:
       labels:
         run: data-platform-api-delivery-document-creates-rmq-kube
-        app: ORDERS
+        app: DELIVERY_DOCUMENT
     spec:
       hostname: data-platform-api-delivery-document-creates-rmq-kube
       containers:
@@ -23,17 +23,17 @@ spec:
           imagePullPolicy: Always
           env:
             - name: "RMQ_QUEUE_FROM"
-              value: "data-platform-api-orders-creates-queue-from"
+              value: "data-platform-api-delivery-document-creates-queue"
             - name: "RMQ_QUEUE_TO_SQL"
               value: "sql-update-kube"
             - name: "RMQ_QUEUE_TO_EX_CONF"
-              value: "data-platform-api-business-partner-exconf-queue"
+              value: "data-platform-api-business-partner-exconf-queue,data-platform-api-business-partner-exconf-queue,data-platform-api-plant-exconf-queue"
             - name: "RMQ_QUEUE_TO_HEADERS_SUB_FUNC"
-              value: "data-platform-api-orders-headers-creates-subfunc-queue"
+              value: "data-platform-api-delivery-document-headers-creates-subfunc-queue"
             - name: "RMQ_QUEUE_TO_ITEMS_SUB_FUNC"
-              value: "data-platform-api-orders-items-creates-subfunc-queue"
+              value: "data-platform-api-delivery-document-items-creates-subfunc-queue"
             - name: "RMQ_SESSION_CONTROL_QUEUE"
-              value: "data-platform-api-orders-creates-session-control-queue"
+              value: "data-platform-api-delivery-document-creates-session-control-queue"
             - name: "DB_NAME"
               value: "DataPlatformMastersAndTransactionsMysqlKube"
           envFrom:
@@ -57,4 +57,4 @@ spec:
       port: 8080
       protocol: TCP
       targetPort: 8080
-      nodePort: 30748
+      nodePort: 30738
