@@ -11,7 +11,7 @@
 			"DeliveryDocument": null,
 			"Buyer": 101,
 			"Seller": 201,
-			"ReferenceDocument": 100,
+			"ReferenceDocument": 116,
 			"ReferenceDocumentItem": null,
 			"OrderID": null,
 			"OrderItem": null,
