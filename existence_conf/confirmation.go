@@ -3,8 +3,8 @@ package existence_conf
 import (
 	"context"
 	dpfm_api_input_reader "data-platform-api-delivery-document-creates-rmq-kube/DPFM_API_Input_Reader"
+	dpfm_api_output_formatter "data-platform-api-delivery-document-creates-rmq-kube/DPFM_API_Output_Formatter"
 	"data-platform-api-delivery-document-creates-rmq-kube/config"
-	"data-platform-api-delivery-document-creates-rmq-kube/sub_func_complementer"
 	"encoding/json"
 	"fmt"
 	"strings"
@@ -33,7 +33,7 @@ func NewExistenceConf(ctx context.Context, c *config.Conf, rmq *rabbitmq.Rabbitm
 }
 
 // Confirm returns existenceMap, allExist, err
-func (c *ExistenceConf) Conf(data *dpfm_api_input_reader.SDC, ssdc *sub_func_complementer.SDC, l *logger.Logger) (allExist bool, errs []error) {
+func (c *ExistenceConf) Conf(data *dpfm_api_input_reader.SDC, output *dpfm_api_output_formatter.SDC, l *logger.Logger) (allExist bool, errs []error) {
 	var res string
 	var resMsg string
 	var err error
@@ -85,13 +85,13 @@ func (c *ExistenceConf) Conf(data *dpfm_api_input_reader.SDC, ssdc *sub_func_com
 		return false, errs
 	}
 
-	ssdc.ExconfResult = getBoolPtr(true)
+	output.ExconfResult = getBoolPtr(true)
 	for _, v := range existenceMap {
 		if v {
 			continue
 		}
-		ssdc.ExconfResult = getBoolPtr(false)
-		ssdc.ExconfError = resMsg
+		output.ExconfResult = getBoolPtr(false)
+		output.ExconfError = resMsg
 		return false, nil
 	}
 	return true, nil
