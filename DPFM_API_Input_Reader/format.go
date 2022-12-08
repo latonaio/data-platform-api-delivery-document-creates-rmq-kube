@@ -5,7 +5,7 @@ import (
 )
 
 func (sdc *SDC) ConvertToHeader() *requests.Header {
-	data := sdc.DeliveryDocument
+	data := sdc.Header
 	return &requests.Header{
 		DeliveryDocument:              data.DeliveryDocument,
 		Buyer:                         data.Buyer,

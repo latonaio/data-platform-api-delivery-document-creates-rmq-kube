@@ -44,7 +44,7 @@ func (c *ExistenceConf) Conf(data *dpfm_api_input_reader.SDC, output *dpfm_api_o
 
 	go func() {
 		defer wg.Done()
-		res, err = c.bpExistenceConf(*data.DeliveryDocument.Buyer, data, &existenceMap, mtx, l)
+		res, err = c.bpExistenceConf(*data.Header.Buyer, data, &existenceMap, mtx, l)
 		if err != nil {
 			mtx.Lock()
 			errs = append(errs, err)
@@ -56,7 +56,7 @@ func (c *ExistenceConf) Conf(data *dpfm_api_input_reader.SDC, output *dpfm_api_o
 	}()
 	go func() {
 		defer wg.Done()
-		res, err = c.bpExistenceConf(*data.DeliveryDocument.Seller, data, &existenceMap, mtx, l)
+		res, err = c.bpExistenceConf(*data.Header.Seller, data, &existenceMap, mtx, l)
 		if errs != nil {
 			mtx.Lock()
 			errs = append(errs, err)

@@ -39,6 +39,11 @@ type CreatesMessage struct {
 	HeaderPartnerPlant []HeaderPartnerPlant `json:"HeaderPartnerPlant"`
 	Item               []Item               `json:"Item"`
 }
+
+type UpdatesMessage struct {
+	HeaderUpdates *HeaderUpdates `json:"Header"`
+}
+
 type HeaderCreates struct {
 	DeliveryDocument              *int     `json:"DeliveryDocument"`
 	Buyer                         *int     `json:"Buyer"`
@@ -88,6 +93,26 @@ type HeaderCreates struct {
 	OverallDelivReltdBillgStatus  *string  `json:"OverallDelivReltdBillgStatus"`
 }
 
+type HeaderUpdates struct {
+	PlannedGoodsIssueDate         *string         `json:"PlannedGoodsIssueDate"`
+	PlannedGoodsIssueTime         *string         `json:"PlannedGoodsIssueTime"`
+	PlannedGoodsReceiptDate       *string         `json:"PlannedGoodsReceiptDate"`
+	PlannedGoodsReceiptTime       *string         `json:"PlannedGoodsReceiptTime"`
+	BillingDocumentDate           *string         `json:"BillingDocumentDate"`
+	HeaderIssuingBlockStatus      *bool           `json:"HeaderIssuingBlockStatus"`
+	HeaderReceivingBlockStatus    *bool           `json:"HeaderReceivingBlockStatus"`
+	GoodsIssueOrReceiptSlipNumber *string         `json:"GoodsIssueOrReceiptSlipNumber"`
+	HeaderBillingBlockStatus      *bool           `json:"HeaderBillingBlockStatus"`
+	Incoterms                     *string         `json:"Incoterms"`
+	IssuingPlantBusinessPartner   *string         `json:"IssuingPlantBusinessPartner"`
+	IssuingPlant                  *string         `json:"IssuingPlant"`
+	ReceivingPlantBusinessPartner *string         `json:"ReceivingPlantBusinessPartner"`
+	ReceivingPlant                *string         `json:"ReceivingPlant"`
+	DeliverFromParty              *int            `json:"DeliverFromParty"`
+	DeliverToParty                *int            `json:"DeliverToParty"`
+	StockIsFullyConfirmed         *bool           `json:"StockIsFullyConfirmed"`
+}
+
 type HeaderPartner struct {
 	DeliveryDocument        *int    `json:"DeliveryDocument"`
 	PartnerFunction         string  `json:"PartnerFunction"`
@@ -100,6 +125,16 @@ type HeaderPartner struct {
 	Currency                *string `json:"Currency"`
 	ExternalDocumentID      *string `json:"ExternalDocumentID"`
 	AddressID               *int    `json:"AddressID"`
+}
+
+type HeaderPartnerUpdates struct {
+	BusinessPartner         *int                   `json:"BusinessPartner"`
+	BusinessPartnerFullName *string                `json:"BusinessPartnerFullName"`
+	BusinessPartnerName     *string                `json:"BusinessPartnerName"`
+	Organization            *string                `json:"Organization"`
+	Country                 *string                `json:"Country"`
+	Language                *string                `json:"Language"`
+	ExternalDocumentID      *string                `json:"ExternalDocumentID"`
 }
 
 type HeaderPartnerContact struct {
@@ -118,6 +153,19 @@ type HeaderPartnerContact struct {
 	ContactTag4       *string `json:"ContactTag4"`
 }
 
+type HeaderPartnerContactUpdates struct {
+	ContactID         *int   `json:"ContactID"`
+	ContactPersonName string `json:"ContactPersonName"`
+	EmailAddress      string `json:"EmailAddress"`
+	PhoneNumber       string `json:"PhoneNumber"`
+	MobilePhoneNumber string `json:"MobilePhoneNumber"`
+	FaxNumber         string `json:"FaxNumber"`
+	ContactTag1       string `json:"ContactTag1"`
+	ContactTag2       string `json:"ContactTag2"`
+	ContactTag3       string `json:"ContactTag3"`
+	ContactTag4       string `json:"ContactTag4"`
+}
+
 type HeaderPartnerPlant struct {
 	DeliveryDocument *int   `json:"DeliveryDocument"`
 	PartnerFunction  string `json:"PartnerFunction"`
@@ -125,11 +173,21 @@ type HeaderPartnerPlant struct {
 	Plant            string `json:"Plant"`
 }
 
+type HeaderPartnerPlantUpdates struct {
+	BusinessPartner int    `json:"BusinessPartner"`
+	Plant 			string `json:"Plant"`
+}
+
 type HeaderPDF struct {
 	DeliveryDocument         *int   `json:"DeliveryDocument"`
 	DocType                  string `json:"DocType"`
 	DocVersionID             *int   `json:"DocVersionID"`
 	DocID                    string `json:"DocID"`
+	DocIssuerBusinessPartner *int   `json:"DocIssuerBusinessPartner"`
+	FileName                 string `json:"FileName"`
+}
+
+type HeaderPDFUpdates struct {
 	DocIssuerBusinessPartner *int   `json:"DocIssuerBusinessPartner"`
 	FileName                 string `json:"FileName"`
 }
@@ -146,6 +204,18 @@ type Address struct {
 	Building         *string `json:"Building"`
 	Floor            *int    `json:"Floor"`
 	Room             *int    `json:"Room"`
+}
+
+type AddressUpdates struct {
+	PostalCode  string `json:"PostalCode"`
+	LocalRegion string `json:"LocalRegion"`
+	Country     string `json:"Country"`
+	District    string `json:"District"`
+	StreetName  string `json:"StreetName"`
+	CityName    string `json:"CityName"`
+	Building    string `json:"Building"`
+	Floor       *int   `json:"Floor"`
+	Room        *int   `json:"Room"`
 }
 
 type Item struct {
@@ -239,11 +309,51 @@ type Item struct {
 	CountryOfOrigin                        *string  `json:"CountryOfOrigin"`
 }
 
+type ItemUpdates struct {
+	ActualGoodsIssueDate                  		 *string       `json:"ActualGoodsIssueDate"`
+	ActualGoodsIssueTime                   		 *string       `json:"ActualGoodsIssueTime"`
+	ActualGoodsReceiptDate                		 *string       `json:"ActualGoodsReceiptDate"`
+	ActualGoodsReceiptTime                		 *string       `json:"ActualGoodsReceiptTime"`
+	ActualGoodsIssueQtyInBaseUnit         		 *float32      `json:"ActualGoodsIssueQtyInBaseUnit"`
+	ActualGoodsIssueQuantity              		 *float32      `json:"ActualGoodsIssueQuantity"`
+	ActualGoodsReceiptQtyInBaseUnit        		 *float32      `json:"ActualGoodsReceiptQtyInBaseUnit"`
+	ActualGoodsReceiptQuantity            		 *float32      `json:"ActualGoodsReceiptQuantity"`
+	StockConfirmationPartnerFunction      		 string        `json:"StockConfirmationPartnerFunction"`
+	StockConfirmationBusinessPartner      		 *int          `json:"StockConfirmationBusinessPartner"`
+	StockConfirmationPlant                       string        `json:"StockConfirmationPlant"`
+	StockConfirmationPlantBatch					 *string       `json:"StockConfirmationPlantBatch"`
+	StockConfirmationPlantBatchValidityStartDate *string       `json:"StockConfirmationPlantBatchValidityStartDate"`
+	StockConfirmationPlantBatchValidityEndDate   *string       `json:"StockConfirmationPlantBatchValidityEndDate"`
+	StockConfirmationPolicy               		 string        `json:"StockConfirmationPolicy"`
+	ProductionPlantStorageLocation         		 string        `json:"ProductionPlantStorageLocation"`
+	IssuingPlantStorageLocation            		 string        `json:"IssuingPlantStorageLocation"`
+	ReceivingPlantStorageLocation          		 string        `json:"ReceivingPlantStorageLocation"`
+	ProductionPlantBatch                   		 string        `json:"ProductionPlantBatch"`
+	IssuingPlantBatch                      		 string        `json:"IssuingPlantBatch"`
+	ReceivingPlantBatch                    		 string        `json:"ReceivingPlantBatch"`
+	ProductionPlantBatchValidityStartDate  		 *string       `json:"ProductionPlantBatchValidityStartDate"`
+	ProductionPlantBatchValidityEndDate    		 *string       `json:"ProductionPlantBatchValidityEndDate"`
+	IssuingPlantBatchValidityStartDate     		 *string       `json:"IssuingPlantBatchValidityStartDate"`
+	IssuingPlantBatchValidityEndDate       		 *string       `json:"IssuingPlantBatchValidityEndDate"`
+	ReceivingPlantBatchValidityStartDate   		 *string       `json:"ReceivingPlantBatchValidityStartDate"`
+	ReceivingPlantBatchValidityEndDate     		 *string       `json:"ReceivingPlantBatchValidityEndDate"`
+    ItemReceivingBlockStatus					 *bool         `json:"ItemReceivingBlockStatus"`
+	ItemBillingBlockStatus				   	     *bool         `json:"ItemBillingBlockStatus"`
+	ItemGrossWeight                        		 *float32      `json:"ItemGrossWeight"`
+	ItemNetWeight                          		 *float32      `json:"ItemNetWeight"`
+	ItemWeightUnit                         		 string        `json:"ItemWeightUnit"`
+	ItemIsBillingRelevant                  		 *bool         `json:"ItemIsBillingRelevant"`
+}
+
 type ItemPartner struct {
 	DeliveryDocument     *int   `json:"DeliveryDocument"`
 	DeliveryDocumentItem *int   `json:"DeliveryDocumentItem"`
 	PartnerFunction      string `json:"PartnerFunction"`
 	BusinessPartner      *int   `json:"BusinessPartner"`
+}
+
+type ItemPartnerUpdates struct {
+	BusinessPartner  *int               `json:"BusinessPartner"`
 }
 
 type ItemPartnerPlant struct {
@@ -252,4 +362,8 @@ type ItemPartnerPlant struct {
 	PartnerFunction      string `json:"PartnerFunction"`
 	BusinessPartner      *int   `json:"BusinessPartner"`
 	Plant                string `json:"Plant"`
+}
+
+type ItemPartnerPlantUpdates struct {
+	Plant string `json:"Plant"`
 }
