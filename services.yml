@@ -34,8 +34,8 @@ spec:
               value: "data-platform-api-delivery-document-items-creates-subfunc-queue"
             - name: "RMQ_SESSION_CONTROL_QUEUE"
               value: "data-platform-api-delivery-document-creates-session-control-queue"
-            - name: "DB_NAME"
-              value: "DataPlatformMastersAndTransactionsMysqlKube"
+            - name: "MYSQL_DB_NAME"
+              value: "DataPlatformCommonSettingsMysqlKube"
           envFrom:
             - configMapRef:
                 name: env-config

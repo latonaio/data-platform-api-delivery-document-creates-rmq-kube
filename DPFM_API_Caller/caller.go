@@ -39,7 +39,7 @@ func NewDPFMAPICaller(
 	}
 }
 
-func (c *DPFMAPICaller) AsyncOrderCreates(
+func (c *DPFMAPICaller) AsyncDeliveryDocumentCreates(
 	accepter []string,
 	input *dpfm_api_input_reader.SDC,
 	output *dpfm_api_output_formatter.SDC,
@@ -57,38 +57,44 @@ func (c *DPFMAPICaller) AsyncOrderCreates(
 
 	// 他PODへ問い合わせ
 	wg.Add(1)
-	go c.exconfProcess(&mtx, &wg, exconfFin, input, output, &exconfAllExist, &errs, log)
-	// if input.APIType == "creates" {
-	// 	go c.subfuncProcess(&mtx, &wg, subFuncFin, input, output, subfuncSDC, accepter, &errs, log)
-	// } else if input.APIType == "updates" {
-	// 	go func() { subFuncFin <- nil }()
-	// } else {
-	// 	go func() { subFuncFin <- nil }()
-	// }
-	go c.subfuncProcess(&mtx, &wg, subFuncFin, input, output, subfuncSDC, accepter, &errs, log)
+	go c.exconfProcess(&mtx, &wg, exconfFin, input, output, &exconfAllExist, accepter, &errs, log)
+	if input.APIType == "creates" {
+		go c.subfuncProcess(&mtx, &wg, subFuncFin, input, output, subfuncSDC, accepter, &errs, log)
+	} else if input.APIType == "updates" {
+		go func() { subFuncFin <- nil }()
+	} else {
+		go func() { subFuncFin <- nil }()
+	}
 
 	// 処理待ち
 	ticker := time.NewTicker(10 * time.Second)
-	if errs = c.finWait(&mtx, exconfFin, ticker); len(errs) != 0 {
-		return subfuncSDC, errs
+	if err := c.finWait(&mtx, exconfFin, ticker); err != nil || len(errs) != 0 {
+		if err != nil {
+			errs = append(errs, err)
+		}
+		return nil, errs
 	}
 	if !exconfAllExist {
 		mtx.Lock()
-		return subfuncSDC, nil
+		return nil, nil
 	}
 	wg.Wait()
-	if errs = c.finWait(&mtx, subFuncFin, ticker); len(errs) != 0 {
-		return subfuncSDC, errs
+	for range accepter {
+		if err := c.finWait(&mtx, subFuncFin, ticker); err != nil || len(errs) != 0 {
+			if err != nil {
+				errs = append(errs, err)
+			}
+			return subfuncSDC, errs
+		}
 	}
 
 	var response interface{}
 	// SQL処理
-	// if input.APIType == "creates" {
-	// 	response = c.createSqlProcess(nil, &mtx, input, output, subfuncSDC, accepter, &errs, log)
-	// } else if input.APIType == "updates" {
-	// 	response = c.updateSqlProcess(nil, &mtx, input, output, accepter, &errs, log)
-	// }
-	response = c.createSqlProcess(nil, &mtx, input, output, subfuncSDC, accepter, &errs, log)
+	if input.APIType == "creates" {
+		response = c.createSqlProcess(nil, &mtx, input, output, subfuncSDC, accepter, &errs, log)
+	} else if input.APIType == "updates" {
+		response = c.updateSqlProcess(nil, &mtx, input, output, accepter, &errs, log)
+	}
 
 	return response, nil
 }
@@ -100,12 +106,13 @@ func (c *DPFMAPICaller) exconfProcess(
 	input *dpfm_api_input_reader.SDC,
 	output *dpfm_api_output_formatter.SDC,
 	exconfAllExist *bool,
+	accepter []string,
 	errs *[]error,
 	log *logger.Logger,
 ) {
 	defer wg.Done()
 	var e []error
-	*exconfAllExist, e = c.configure.Conf(input, output, log)
+	*exconfAllExist, e = c.configure.Conf(input, output, accepter, log)
 	if len(e) != 0 {
 		mtx.Lock()
 		*errs = append(*errs, e...)
@@ -134,6 +141,12 @@ func (c *DPFMAPICaller) subfuncProcess(
 			c.headerCreate(mtx, wg, subFuncFin, input, output, subfuncSDC, errs, log)
 		case "Item":
 			c.itemCreate(mtx, wg, subFuncFin, input, output, subfuncSDC, errs, log)
+		case "Partner":
+			if contains(accepter, "Item") {
+				subFuncFin <- nil
+			} else {
+				c.itemCreate(mtx, wg, subFuncFin, input, output, subfuncSDC, errs, log)
+			}
 		default:
 			wg.Done()
 		}
@@ -144,18 +157,15 @@ func (c *DPFMAPICaller) finWait(
 	mtx *sync.Mutex,
 	finChan chan error,
 	ticker *time.Ticker,
-) []error {
-	errs := make([]error, 1)
+) error {
 	select {
 	case e := <-finChan:
 		if e != nil {
 			mtx.Lock()
-			errs[1] = e
-			return errs
+			return e
 		}
 	case <-ticker.C:
-		errs = append(errs, xerrors.New("time out"))
-		return errs
+		return xerrors.New("time out")
 	}
 	return nil
 }
@@ -177,11 +187,9 @@ func (c *DPFMAPICaller) headerCreate(
 	defer wg.Done()
 	err = c.complementer.ComplementHeader(input, subfuncSDC, log)
 	if err != nil {
-		log.Error(err)
-		err = nil
-		// mtx.Lock()
-		// *errs = append(*errs, err)
-		// mtx.Unlock()
+		mtx.Lock()
+		*errs = append(*errs, err)
+		mtx.Unlock()
 		return
 	}
 	output.SubfuncResult = getBoolPtr(true)
@@ -241,4 +249,13 @@ func checkResult(msg rabbitmq.RabbitmqMessage) bool {
 
 func getBoolPtr(b bool) *bool {
 	return &b
+}
+
+func contains(slice []string, target string) bool {
+	for _, v := range slice {
+		if v == target {
+			return true
+		}
+	}
+	return false
 }

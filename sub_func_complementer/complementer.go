@@ -46,8 +46,6 @@ func (c *SubFuncComplementer) ComplementHeader(input *dpfm_api_input_reader.SDC,
 	subfuncSDC.SubfuncError = s.SubfuncError
 
 	subfuncSDC.Message.Header = msg.Header
-	subfuncSDC.Message.HeaderPartner = msg.HeaderPartner
-	subfuncSDC.Message.HeaderPartnerPlant = msg.HeaderPartnerPlant
 
 	return err
 }
@@ -74,9 +72,11 @@ func (c *SubFuncComplementer) ComplementItem(input *dpfm_api_input_reader.SDC, s
 	subfuncSDC.SubfuncError = s.SubfuncError
 
 	subfuncSDC.Message.Item = msg.Item
+	subfuncSDC.Message.Partner = msg.Partner
 
 	return err
 }
+
 func getBoolPtr(b bool) *bool {
 	return &b
 }

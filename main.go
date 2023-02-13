@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/latonaio/golang-logging-library-for-data-platform/logger"
+	database "github.com/latonaio/golang-mysql-network-connector"
 	rabbitmq "github.com/latonaio/rabbitmq-golang-client-for-data-platform"
 )
 
@@ -20,6 +21,13 @@ func main() {
 	ctx := context.Background()
 	l := logger.NewLogger()
 	conf := config.NewConf()
+	db, err := database.NewMySQL(conf.DB)
+	if err != nil {
+		l.Error(err)
+		return
+	}
+	defer db.Close()
+
 	rmq, err := rabbitmq.NewRabbitmqClient(conf.RMQ.URL(), conf.RMQ.QueueFrom(), conf.RMQ.SessionControlQueue(), conf.RMQ.QueueToSQL(), 0)
 	if err != nil {
 		l.Fatal(err.Error())
@@ -31,7 +39,7 @@ func main() {
 	}
 	defer rmq.Stop()
 
-	confirmor := existence_conf.NewExistenceConf(ctx, conf, rmq)
+	confirmor := existence_conf.NewExistenceConf(ctx, conf, rmq, db)
 	complementer := sub_func_complementer.NewSubFuncComplementer(ctx, conf, rmq)
 	caller := dpfm_api_caller.NewDPFMAPICaller(conf, rmq, confirmor, complementer)
 
@@ -80,7 +88,7 @@ func callProcess(rmq *rabbitmq.RabbitmqClient, caller *dpfm_api_caller.DPFMAPICa
 
 	accepter := getAccepter(&input)
 
-	res, errs := caller.AsyncOrderCreates(accepter, &input, &output, l)
+	res, errs := caller.AsyncDeliveryDocumentCreates(accepter, &input, &output, l)
 	if len(errs) != 0 {
 		for _, err := range errs {
 			l.Error(err)
@@ -88,11 +96,13 @@ func callProcess(rmq *rabbitmq.RabbitmqClient, caller *dpfm_api_caller.DPFMAPICa
 		output.APIProcessingResult = getBoolPtr(false)
 		output.APIProcessingError = errs[0].Error()
 		output.Message = res
+		output.ConnectionKey = "response"
 		rmq.Send(conf.RMQ.QueueToResponse(), output)
 		return errs[0]
 	}
 	output.APIProcessingResult = getBoolPtr(true)
 	output.Message = res
+	output.ConnectionKey = "response"
 
 	l.JsonParseOut(output)
 	rmq.Send(conf.RMQ.QueueToResponse(), output)
@@ -108,7 +118,7 @@ func getAccepter(input *dpfm_api_input_reader.SDC) []string {
 
 	if accepter[0] == "All" {
 		accepter = []string{
-			"Header", "Item",
+			"Header", "Item", "Partner",
 		}
 	}
 	return accepter

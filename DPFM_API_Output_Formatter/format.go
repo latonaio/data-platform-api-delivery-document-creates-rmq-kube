@@ -1,97 +1,109 @@
 package dpfm_api_output_formatter
 
 import (
-	dpfm_api_input_reader "data-platform-api-delivery-document-creates-rmq-kube/DPFM_API_Input_Reader"
+	dpfm_api_processing_formatter "data-platform-api-delivery-document-creates-rmq-kube/DPFM_API_Processing_Formatter"
 	"data-platform-api-delivery-document-creates-rmq-kube/sub_func_complementer"
 )
 
-func ConvertToHeaderCreates(subfuncSDC *sub_func_complementer.SDC) *HeaderCreates {
-	data := subfuncSDC.Message.Header
+func ConvertToHeaderCreates(subfuncSDC *sub_func_complementer.SDC) *[]Header {
+	var headers []Header
 
-	headerCreate := &HeaderCreates{
-		DeliveryDocument:                data.DeliveryDocument,
-		Buyer:                           data.Buyer,
-		Seller:                          data.Seller,
-		ReferenceDocument:               data.ReferenceDocument,
-		ReferenceDocumentItem:           data.ReferenceDocumentItem,
-		OrderID:                         data.OrderID,
-		OrderItem:                       data.OrderItem,
-		ContractType:                    data.ContractType,
-		OrderValidityStartDate:          data.OrderValidityStartDate,
-		OrderValidityEndDate:            data.OrderValidityEndDate,
-		IssuingPlantTimeZone:            data.IssuingPlantTimeZone,
-		ReceivingPlantTimeZone:          data.ReceivingPlantTimeZone,
-		DocumentDate:                    data.DocumentDate,
-		PlannedGoodsIssueDate:           data.PlannedGoodsIssueDate,
-		PlannedGoodsIssueTime:           data.PlannedGoodsIssueTime,
-		PlannedGoodsReceiptDate:         data.PlannedGoodsReceiptDate,
-		PlannedGoodsReceiptTime:         data.PlannedGoodsReceiptTime,
-		InvoiceDocumentDate:             data.InvoiceDocumentDate,
-		HeaderCompleteDeliveryIsDefined: data.HeaderCompleteDeliveryIsDefined,
-		HeaderDeliveryStatus:            data.HeaderDeliveryStatus,
-		CreationDate:                    data.CreationDate,
-		CreationTime:                    data.CreationTime,
-		HeaderDeliveryBlockStatus:       data.HeaderDeliveryBlockStatus,
-		HeaderIssuingBlockStatus:        data.HeaderIssuingBlockStatus,
-		HeaderReceivingBlockStatus:      data.HeaderReceivingBlockStatus,
-		GoodsIssueOrReceiptSlipNumber:   data.GoodsIssueOrReceiptSlipNumber,
-		HeaderBillingStatus:             data.HeaderBillingStatus,
-		HeaderBillingConfStatus:         data.HeaderBillingConfStatus,
-		HeaderBillingBlockStatus:        data.HeaderBillingBlockStatus,
-		HeaderGrossWeight:               data.HeaderGrossWeight,
-		HeaderNetWeight:                 data.HeaderNetWeight,
-		HeaderWeightUnit:                data.HeaderWeightUnit,
-		Incoterms:                       data.Incoterms,
-		BillFromParty:                   data.BillFromParty,
-		BillToParty:                     data.BillToParty,
-		BillFromCountry:                 data.BillFromCountry,
-		BillToCountry:                   data.BillToCountry,
-		Payer:                           data.Payer,
-		Payee:                           data.Payee,
-		IsExportImportDelivery:          data.IsExportImportDelivery,
-		LastChangeDate:                  data.LastChangeDate,
-		IssuingPlantBusinessPartner:     data.IssuingPlantBusinessPartner,
-		IssuingPlant:                    data.IssuingPlant,
-		ReceivingPlantBusinessPartner:   data.ReceivingPlantBusinessPartner,
-		ReceivingPlant:                  data.ReceivingPlant,
-		DeliverToParty:                  data.DeliverToParty,
-		DeliverFromParty:                data.DeliverFromParty,
-		TransactionCurrency:             data.TransactionCurrency,
-		StockIsFullyConfirmed:           data.StockIsFullyConfirmed,
+	for _, data := range *subfuncSDC.Message.Header {
+		headers = append(headers, Header{
+			DeliveryDocument:                       data.DeliveryDocument,
+			SupplyChainRelationshipID:              data.SupplyChainRelationshipID,
+			SupplyChainRelationshipDeliveryID:      data.SupplyChainRelationshipDeliveryID,
+			SupplyChainRelationshipDeliveryPlantID: data.SupplyChainRelationshipDeliveryPlantID,
+			SupplyChainRelationshipBillingID:       data.SupplyChainRelationshipBillingID,
+			SupplyChainRelationshipPaymentID:       data.SupplyChainRelationshipPaymentID,
+			Buyer:                                  data.Buyer,
+			Seller:                                 data.Seller,
+			DeliverToParty:                         data.DeliverToParty,
+			DeliverFromParty:                       data.DeliverFromParty,
+			DeliverToPlant:                         data.DeliverToPlant,
+			DeliverFromPlant:                       data.DeliverFromPlant,
+			BillToParty:                            data.BillToParty,
+			BillFromParty:                          data.BillFromParty,
+			BillToCountry:                          data.BillToCountry,
+			BillFromCountry:                        data.BillFromCountry,
+			Payer:                                  data.Payer,
+			Payee:                                  data.Payee,
+			IsExportImport:                         data.IsExportImport,
+			DeliverToPlantTimeZone:                 data.DeliverToPlantTimeZone,
+			DeliverFromPlantTimeZone:               data.DeliverFromPlantTimeZone,
+			ReferenceDocument:                      data.ReferenceDocument,
+			ReferenceDocumentItem:                  data.ReferenceDocumentItem,
+			OrderID:                                data.OrderID,
+			OrderItem:                              data.OrderItem,
+			ContractType:                           data.ContractType,
+			OrderValidityStartDate:                 data.OrderValidityStartDate,
+			OrderValidityEndDate:                   data.OrderValidityEndDate,
+			DocumentDate:                           data.DocumentDate,
+			PlannedGoodsIssueDate:                  data.PlannedGoodsIssueDate,
+			PlannedGoodsIssueTime:                  data.PlannedGoodsIssueTime,
+			PlannedGoodsReceiptDate:                data.PlannedGoodsReceiptDate,
+			PlannedGoodsReceiptTime:                data.PlannedGoodsReceiptTime,
+			InvoiceDocumentDate:                    data.InvoiceDocumentDate,
+			HeaderCompleteDeliveryIsDefined:        data.HeaderCompleteDeliveryIsDefined,
+			HeaderDeliveryStatus:                   data.HeaderDeliveryStatus,
+			CreationDate:                           data.CreationDate,
+			CreationTime:                           data.CreationTime,
+			LastChangeDate:                         data.LastChangeDate,
+			LastChangeTime:                         data.LastChangeTime,
+			GoodsIssueOrReceiptSlipNumber:          data.GoodsIssueOrReceiptSlipNumber,
+			HeaderBillingStatus:                    data.HeaderBillingStatus,
+			HeaderBillingConfStatus:                data.HeaderBillingConfStatus,
+			HeaderBillingBlockStatus:               data.HeaderBillingBlockStatus,
+			HeaderGrossWeight:                      data.HeaderGrossWeight,
+			HeaderNetWeight:                        data.HeaderNetWeight,
+			HeaderWeightUnit:                       data.HeaderWeightUnit,
+			Incoterms:                              data.Incoterms,
+			TransactionCurrency:                    data.TransactionCurrency,
+			HeaderDeliveryBlockStatus:              data.HeaderDeliveryBlockStatus,
+			HeaderIssuingBlockStatus:               data.HeaderIssuingBlockStatus,
+			HeaderReceivingBlockStatus:             data.HeaderReceivingBlockStatus,
+			IsCancelled:                            data.IsCancelled,
+			IsMarkedForDeletion:                    data.IsMarkedForDeletion,
+		})
 	}
 
-	return headerCreate
+	return &headers
 }
 
-func ConvertToHeaderUpdates(headerUpdates dpfm_api_input_reader.HeaderUpdates) *HeaderUpdates {
-	data := headerUpdates
+func ConvertToHeaderUpdates(headerUpdates *[]dpfm_api_processing_formatter.HeaderUpdates) *[]Header {
+	var header []Header
 
-	return &HeaderUpdates{
-		PlannedGoodsIssueDate:         data.PlannedGoodsIssueDate,
-		PlannedGoodsIssueTime:         data.PlannedGoodsIssueTime,
-		PlannedGoodsReceiptDate:       data.PlannedGoodsReceiptDate,
-		PlannedGoodsReceiptTime:       data.PlannedGoodsReceiptTime,
-		BillingDocumentDate:           data.BillingDocumentDate,
-		HeaderIssuingBlockStatus:      data.HeaderIssuingBlockStatus,
-		HeaderReceivingBlockStatus:    data.HeaderReceivingBlockStatus,
-		GoodsIssueOrReceiptSlipNumber: data.GoodsIssueOrReceiptSlipNumber,
-		HeaderBillingBlockStatus:      data.HeaderBillingBlockStatus,
-		Incoterms:                     data.Incoterms,
-		IssuingPlantBusinessPartner:   data.IssuingPlantBusinessPartner,
-		IssuingPlant:                  data.IssuingPlant,
-		ReceivingPlantBusinessPartner: data.ReceivingPlantBusinessPartner,
-		ReceivingPlant:                data.ReceivingPlant,
-		DeliverFromParty:              data.DeliverFromParty,
-		DeliverToParty:                data.DeliverToParty,
-		StockIsFullyConfirmed:         data.StockIsFullyConfirmed,
+	for _, data := range *headerUpdates {
+		header = append(header, Header{
+			SupplyChainRelationshipDeliveryID:      data.SupplyChainRelationshipDeliveryID,
+			SupplyChainRelationshipDeliveryPlantID: data.SupplyChainRelationshipDeliveryPlantID,
+			DeliverToParty:                         data.DeliverToParty,
+			DeliverFromParty:                       data.DeliverFromParty,
+			DeliverToPlant:                         data.DeliverToPlant,
+			DeliverFromPlant:                       data.DeliverFromPlant,
+			DocumentDate:                           data.DocumentDate,
+			PlannedGoodsIssueDate:                  data.PlannedGoodsIssueDate,
+			PlannedGoodsIssueTime:                  data.PlannedGoodsIssueTime,
+			PlannedGoodsReceiptDate:                data.PlannedGoodsReceiptDate,
+			PlannedGoodsReceiptTime:                data.PlannedGoodsReceiptTime,
+			InvoiceDocumentDate:                    data.InvoiceDocumentDate,
+			GoodsIssueOrReceiptSlipNumber:          data.GoodsIssueOrReceiptSlipNumber,
+			HeaderBillingBlockStatus:               data.HeaderBillingBlockStatus,
+			Incoterms:                              data.Incoterms,
+			HeaderDeliveryBlockStatus:              data.HeaderDeliveryBlockStatus,
+			HeaderIssuingBlockStatus:               data.HeaderIssuingBlockStatus,
+			HeaderReceivingBlockStatus:             data.HeaderReceivingBlockStatus,
+		})
 	}
+
+	return &header
 }
 
-func ConvertToHeaderPartner(subfuncSDC *sub_func_complementer.SDC) []HeaderPartner {
-	var headerPartner []HeaderPartner
+func ConvertToPartnerCreates(subfuncSDC *sub_func_complementer.SDC) *[]Partner {
+	var partner []Partner
 
-	for _, data := range subfuncSDC.Message.HeaderPartner {
-		headerPartner = append(headerPartner, HeaderPartner{
+	for _, data := range *subfuncSDC.Message.Partner {
+		partner = append(partner, Partner{
 			DeliveryDocument:        data.DeliveryDocument,
 			PartnerFunction:         data.PartnerFunction,
 			BusinessPartner:         data.BusinessPartner,
@@ -106,132 +118,244 @@ func ConvertToHeaderPartner(subfuncSDC *sub_func_complementer.SDC) []HeaderPartn
 		})
 	}
 
-	return headerPartner
+	return &partner
 }
 
-func ConvertToHeaderPartnerPlant(subfuncSDC *sub_func_complementer.SDC) []HeaderPartnerPlant {
-	var headerPartnerPlant []HeaderPartnerPlant
+func ConvertToPartnerUpdates(partnerUpdates *[]dpfm_api_processing_formatter.PartnerUpdates) *[]Partner {
+	var partner []Partner
 
-	for _, data := range subfuncSDC.Message.HeaderPartnerPlant {
-		headerPartnerPlant = append(headerPartnerPlant, HeaderPartnerPlant{
-			DeliveryDocument: data.DeliveryDocument,
-			PartnerFunction:  data.PartnerFunction,
-			BusinessPartner:  data.BusinessPartner,
-			Plant:            data.Plant,
+	for _, data := range *partnerUpdates {
+		partner = append(partner, Partner{
+			BusinessPartner:         data.BusinessPartner,
+			BusinessPartnerFullName: data.BusinessPartnerFullName,
+			BusinessPartnerName:     data.BusinessPartnerName,
+			Organization:            data.Organization,
+			Country:                 data.Country,
+			Language:                data.Language,
+			ExternalDocumentID:      data.ExternalDocumentID,
 		})
 	}
 
-	return headerPartnerPlant
+	return &partner
 }
 
-func ConvertToItem(subfuncSDC *sub_func_complementer.SDC) []Item {
+func ConvertToItemCreates(subfuncSDC *sub_func_complementer.SDC) *[]Item {
 	var item []Item
 
-	for _, data := range subfuncSDC.Message.Item {
+	for _, data := range *subfuncSDC.Message.Item {
 		item = append(item, Item{
-			DeliveryDocument:                             data.DeliveryDocument,
-			DeliveryDocumentItem:                         data.DeliveryDocumentItem,
-			DeliveryDocumentItemCategory:                 data.DeliveryDocumentItemCategory,
-			DeliveryDocumentItemText:                     data.DeliveryDocumentItemText,
-			DeliveryDocumentItemTextByBuyer:              data.DeliveryDocumentItemTextByBuyer,
-			DeliveryDocumentItemTextBySeller:             data.DeliveryDocumentItemTextBySeller,
-			Product:                                      data.Product,
-			ProductStandardID:                            data.ProductStandardID,
-			ProductGroup:                                 data.ProductGroup,
-			BaseUnit:                                     data.BaseUnit,
-			OriginalQuantityInBaseUnit:                   data.OriginalQuantityInBaseUnit,
-			IssuingUnit:                                  data.IssuingUnit,
-			ReceivingUnit:                                data.ReceivingUnit,
-			ActualGoodsIssueDate:                         data.ActualGoodsIssueDate,
-			ActualGoodsIssueTime:                         data.ActualGoodsIssueTime,
-			ActualGoodsReceiptDate:                       data.ActualGoodsReceiptDate,
-			ActualGoodsReceiptTime:                       data.ActualGoodsReceiptTime,
-			ActualGoodsIssueQtyInBaseUnit:                data.ActualGoodsIssueQtyInBaseUnit,
-			ActualGoodsIssueQuantity:                     data.ActualGoodsIssueQuantity,
-			ActualGoodsReceiptQtyInBaseUnit:              data.ActualGoodsReceiptQtyInBaseUnit,
-			ActualGoodsReceiptQuantity:                   data.ActualGoodsReceiptQuantity,
-			CompleteItemDeliveryIsDefined:                data.CompleteItemDeliveryIsDefined,
-			StockConfirmationPartnerFunction:             data.StockConfirmationPartnerFunction,
+			DeliveryDocument:                              data.DeliveryDocument,
+			DeliveryDocumentItem:                          data.DeliveryDocumentItem,
+			DeliveryDocumentItemCategory:                  data.DeliveryDocumentItemCategory,
+			SupplyChainRelationshipID:                     data.SupplyChainRelationshipID,
+			SupplyChainRelationshipDeliveryID:             data.SupplyChainRelationshipDeliveryID,
+			SupplyChainRelationshipDeliveryPlantID:        data.SupplyChainRelationshipDeliveryPlantID,
+			SupplyChainRelationshipStockConfPlantID:       data.SupplyChainRelationshipStockConfPlantID,
+			SupplyChainRelationshipProductionPlantID:      data.SupplyChainRelationshipProductionPlantID,
+			SupplyChainRelationshipBillingID:              data.SupplyChainRelationshipBillingID,
+			SupplyChainRelationshipPaymentID:              data.SupplyChainRelationshipPaymentID,
+			Buyer:                                         data.Buyer,
+			Seller:                                        data.Seller,
+			DeliverToParty:                                data.DeliverToParty,
+			DeliverFromParty:                              data.DeliverFromParty,
+			DeliverToPlant:                                data.DeliverToPlant,
+			DeliverFromPlant:                              data.DeliverFromPlant,
+			BillToParty:                                   data.BillToParty,
+			BillFromParty:                                 data.BillFromParty,
+			BillToCountry:                                 data.BillToCountry,
+			BillFromCountry:                               data.BillFromCountry,
+			Payer:                                         data.Payer,
+			Payee:                                         data.Payee,
+			DeliverToPlantStorageLocation:                 data.DeliverToPlantStorageLocation,
+			ProductIsBatchManagedInDeliverToPlant:         data.ProductIsBatchManagedInDeliverToPlant,
+			BatchMgmtPolicyInDeliverToPlant:               data.BatchMgmtPolicyInDeliverToPlant,
+			DeliverToPlantBatch:                           data.DeliverToPlantBatch,
+			DeliverToPlantBatchValidityStartDate:          data.DeliverToPlantBatchValidityStartDate,
+			DeliverToPlantBatchValidityEndDate:            data.DeliverToPlantBatchValidityEndDate,
+			DeliverFromPlantStorageLocation:               data.DeliverFromPlantStorageLocation,
+			ProductIsBatchManagedInDeliverFromPlant:       data.ProductIsBatchManagedInDeliverFromPlant,
+			BatchMgmtPolicyInDeliverFromPlant:             data.BatchMgmtPolicyInDeliverFromPlant,
+			DeliverFromPlantBatch:                         data.DeliverFromPlantBatch,
+			DeliverFromPlantBatchValidityStartDate:        data.DeliverFromPlantBatchValidityStartDate,
+			DeliverFromPlantBatchValidityEndDate:          data.DeliverFromPlantBatchValidityEndDate,
+			StockConfirmationBusinessPartner:              data.StockConfirmationBusinessPartner,
+			StockConfirmationPlant:                        data.StockConfirmationPlant,
+			ProductIsBatchManagedInStockConfirmationPlant: data.ProductIsBatchManagedInStockConfirmationPlant,
+			BatchMgmtPolicyInStockConfirmationPlant:       data.BatchMgmtPolicyInStockConfirmationPlant,
+			StockConfirmationPlantBatch:                   data.StockConfirmationPlantBatch,
+			StockConfirmationPlantBatchValidityStartDate:  data.StockConfirmationPlantBatchValidityStartDate,
+			StockConfirmationPlantBatchValidityEndDate:    data.StockConfirmationPlantBatchValidityEndDate,
+			StockConfirmationPolicy:                       data.StockConfirmationPolicy,
+			StockConfirmationStatus:                       data.StockConfirmationStatus,
+			ProductionPlantBusinessPartner:                data.ProductionPlantBusinessPartner,
+			ProductionPlant:                               data.ProductionPlant,
+			ProductionPlantStorageLocation:                data.ProductionPlantStorageLocation,
+			ProductIsBatchManagedInProductionPlant:        data.ProductIsBatchManagedInProductionPlant,
+			BatchMgmtPolicyInProductionPlant:              data.BatchMgmtPolicyInProductionPlant,
+			ProductionPlantBatch:                          data.ProductionPlantBatch,
+			ProductionPlantBatchValidityStartDate:         data.ProductionPlantBatchValidityStartDate,
+			ProductionPlantBatchValidityEndDate:           data.ProductionPlantBatchValidityEndDate,
+			DeliveryDocumentItemText:                      data.DeliveryDocumentItemText,
+			DeliveryDocumentItemTextByBuyer:               data.DeliveryDocumentItemTextByBuyer,
+			DeliveryDocumentItemTextBySeller:              data.DeliveryDocumentItemTextBySeller,
+			Product:                                       data.Product,
+			ProductStandardID:                             data.ProductStandardID,
+			ProductGroup:                                  data.ProductGroup,
+			BaseUnit:                                      data.BaseUnit,
+			OriginalQuantityInBaseUnit:                    data.OriginalQuantityInBaseUnit,
+			DeliveryUnit:                                  data.DeliveryUnit,
+			ActualGoodsIssueDate:                          data.ActualGoodsIssueDate,
+			ActualGoodsIssueTime:                          data.ActualGoodsIssueTime,
+			ActualGoodsReceiptDate:                        data.ActualGoodsReceiptDate,
+			ActualGoodsReceiptTime:                        data.ActualGoodsReceiptTime,
+			ActualGoodsIssueQuantity:                      data.ActualGoodsIssueQuantity,
+			ActualGoodsIssueQtyInBaseUnit:                 data.ActualGoodsIssueQtyInBaseUnit,
+			ActualGoodsReceiptQuantity:                    data.ActualGoodsReceiptQuantity,
+			ActualGoodsReceiptQtyInBaseUnit:               data.ActualGoodsReceiptQtyInBaseUnit,
+			CreationDate:                                  data.CreationDate,
+			CreationTime:                                  data.CreationTime,
+			LastChangeDate:                                data.LastChangeDate,
+			LastChangeTime:                                data.LastChangeTime,
+			ItemBillingStatus:                             data.ItemBillingStatus,
+			SalesCostGLAccount:                            data.SalesCostGLAccount,
+			ReceivingGLAccount:                            data.ReceivingGLAccount,
+			ItemCompleteDeliveryIsDefined:                 data.ItemCompleteDeliveryIsDefined,
+			ItemGrossWeight:                               data.ItemGrossWeight,
+			ItemNetWeight:                                 data.ItemNetWeight,
+			ItemWeightUnit:                                data.ItemWeightUnit,
+			ItemIsBillingRelevant:                         data.ItemIsBillingRelevant,
+			NetAmount:                                     data.NetAmount,
+			TaxAmount:                                     data.TaxAmount,
+			GrossAmount:                                   data.GrossAmount,
+			OrderID:                                       data.OrderID,
+			OrderItem:                                     data.OrderItem,
+			OrderType:                                     data.OrderType,
+			ContractType:                                  data.ContractType,
+			OrderValidityStartDate:                        data.OrderValidityStartDate,
+			OrderValidityEndDate:                          data.OrderValidityEndDate,
+			PaymentTerms:                                  data.PaymentTerms,
+			DueCalculationBaseDate:                        data.DueCalculationBaseDate,
+			PaymentDueDate:                                data.PaymentDueDate,
+			NetPaymentDays:                                data.NetPaymentDays,
+			PaymentMethod:                                 data.PaymentMethod,
+			InvoicePeriodStartDate:                        data.InvoicePeriodStartDate,
+			InvoicePeriodEndDate:                          data.InvoicePeriodEndDate,
+			ConfirmedDeliveryDate:                         data.ConfirmedDeliveryDate,
+			Project:                                       data.Project,
+			ReferenceDocument:                             data.ReferenceDocument,
+			ReferenceDocumentItem:                         data.ReferenceDocumentItem,
+			TransactionTaxClassification:                  data.TransactionTaxClassification,
+			ProductTaxClassificationBillToCountry:         data.ProductTaxClassificationBillToCountry,
+			ProductTaxClassificationBillFromCountry:       data.ProductTaxClassificationBillFromCountry,
+			DefinedTaxClassification:                      data.DefinedTaxClassification,
+			AccountAssignmentGroup:                        data.AccountAssignmentGroup,
+			ProductAccountAssignmentGroup:                 data.ProductAccountAssignmentGroup,
+			TaxCode:                                       data.TaxCode,
+			TaxRate:                                       data.TaxRate,
+			CountryOfOrigin:                               data.CountryOfOrigin,
+			CountryOfOriginLanguage:                       data.CountryOfOriginLanguage,
+			ItemDeliveryBlockStatus:                       data.ItemDeliveryBlockStatus,
+			ItemIssuingBlockStatus:                        data.ItemIssuingBlockStatus,
+			ItemReceivingBlockStatus:                      data.ItemReceivingBlockStatus,
+			ItemBillingBlockStatus:                        data.ItemBillingBlockStatus,
+			IsCancelled:                                   data.IsCancelled,
+			IsMarkedForDeletion:                           data.IsMarkedForDeletion,
+		})
+	}
+
+	return &item
+}
+
+func ConvertToItemUpdates(itemUpdates *[]dpfm_api_processing_formatter.ItemUpdates) *[]Item {
+	var item []Item
+
+	for _, data := range *itemUpdates {
+		item = append(item, Item{
+			SupplyChainRelationshipStockConfPlantID:      data.SupplyChainRelationshipStockConfPlantID,
+			SupplyChainRelationshipProductionPlantID:     data.SupplyChainRelationshipProductionPlantID,
+			DeliverToPlantStorageLocation:                data.DeliverToPlantStorageLocation,
+			DeliverToPlantBatch:                          data.DeliverToPlantBatch,
+			DeliverToPlantBatchValidityStartDate:         data.DeliverToPlantBatchValidityStartDate,
+			DeliverToPlantBatchValidityEndDate:           data.DeliverToPlantBatchValidityEndDate,
+			DeliverFromPlantStorageLocation:              data.DeliverFromPlantStorageLocation,
+			DeliverFromPlantBatch:                        data.DeliverFromPlantBatch,
+			DeliverFromPlantBatchValidityStartDate:       data.DeliverFromPlantBatchValidityStartDate,
+			DeliverFromPlantBatchValidityEndDate:         data.DeliverFromPlantBatchValidityEndDate,
 			StockConfirmationBusinessPartner:             data.StockConfirmationBusinessPartner,
 			StockConfirmationPlant:                       data.StockConfirmationPlant,
 			StockConfirmationPlantBatch:                  data.StockConfirmationPlantBatch,
 			StockConfirmationPlantBatchValidityStartDate: data.StockConfirmationPlantBatchValidityStartDate,
 			StockConfirmationPlantBatchValidityEndDate:   data.StockConfirmationPlantBatchValidityEndDate,
 			StockConfirmationPolicy:                      data.StockConfirmationPolicy,
-			StockConfirmationStatus:                      data.StockConfirmationStatus,
-			ProductionPlantPartnerFunction:               data.ProductionPlantPartnerFunction,
 			ProductionPlantBusinessPartner:               data.ProductionPlantBusinessPartner,
 			ProductionPlant:                              data.ProductionPlant,
 			ProductionPlantStorageLocation:               data.ProductionPlantStorageLocation,
-			IssuingPlantPartnerFunction:                  data.IssuingPlantPartnerFunction,
-			IssuingPlantBusinessPartner:                  data.IssuingPlantBusinessPartner,
-			IssuingPlant:                                 data.IssuingPlant,
-			IssuingPlantStorageLocation:                  data.IssuingPlantStorageLocation,
-			ReceivingPlantPartnerFunction:                data.ReceivingPlantPartnerFunction,
-			ReceivingPlantBusinessPartner:                data.ReceivingPlantBusinessPartner,
-			ReceivingPlant:                               data.ReceivingPlant,
-			ReceivingPlantStorageLocation:                data.ReceivingPlantStorageLocation,
-			ProductIsBatchManagedInProductionPlant:       data.ProductIsBatchManagedInProductionPlant,
-			ProductIsBatchManagedInIssuingPlant:          data.ProductIsBatchManagedInIssuingPlant,
-			ProductIsBatchManagedInReceivingPlant:        data.ProductIsBatchManagedInReceivingPlant,
-			BatchMgmtPolicyInProductionPlant:             data.BatchMgmtPolicyInProductionPlant,
-			BatchMgmtPolicyInIssuingPlant:                data.BatchMgmtPolicyInIssuingPlant,
-			BatchMgmtPolicyInReceivingPlant:              data.BatchMgmtPolicyInReceivingPlant,
 			ProductionPlantBatch:                         data.ProductionPlantBatch,
-			IssuingPlantBatch:                            data.IssuingPlantBatch,
-			ReceivingPlantBatch:                          data.ReceivingPlantBatch,
 			ProductionPlantBatchValidityStartDate:        data.ProductionPlantBatchValidityStartDate,
 			ProductionPlantBatchValidityEndDate:          data.ProductionPlantBatchValidityEndDate,
-			IssuingPlantBatchValidityStartDate:           data.IssuingPlantBatchValidityStartDate,
-			IssuingPlantBatchValidityEndDate:             data.IssuingPlantBatchValidityEndDate,
-			ReceivingPlantBatchValidityStartDate:         data.ReceivingPlantBatchValidityStartDate,
-			ReceivingPlantBatchValidityEndDate:           data.ReceivingPlantBatchValidityEndDate,
-			CreationDate:                                 data.CreationDate,
-			CreationTime:                                 data.CreationTime,
-			ItemBillingStatus:                            data.ItemBillingStatus,
-			ItemBillingConfStatus:                        data.ItemBillingConfStatus,
-			SalesCostGLAccount:                           data.SalesCostGLAccount,
-			ReceivingGLAccount:                           data.ReceivingGLAccount,
-			IssuingGoodsMovementType:                     data.IssuingGoodsMovementType,
-			ReceivingGoodsMovementType:                   data.ReceivingGoodsMovementType,
-			ItemDeliveryBlockStatus:                      data.ItemDeliveryBlockStatus,
-			ItemIssuingBlockStatus:                       data.ItemIssuingBlockStatus,
-			ItemReceivingBlockStatus:                     data.ItemReceivingBlockStatus,
-			ItemBillingBlockStatus:                       data.ItemBillingBlockStatus,
-			ItemCompleteDeliveryIsDefined:                data.ItemCompleteDeliveryIsDefined,
-			ItemDeliveryIncompletionStatus:               data.ItemDeliveryIncompletionStatus,
+			ActualGoodsIssueDate:                         data.ActualGoodsIssueDate,
+			ActualGoodsIssueTime:                         data.ActualGoodsIssueTime,
+			ActualGoodsReceiptDate:                       data.ActualGoodsReceiptDate,
+			ActualGoodsReceiptTime:                       data.ActualGoodsReceiptTime,
+			ActualGoodsIssueQuantity:                     data.ActualGoodsIssueQuantity,
+			ActualGoodsIssueQtyInBaseUnit:                data.ActualGoodsIssueQtyInBaseUnit,
+			ActualGoodsReceiptQuantity:                   data.ActualGoodsReceiptQuantity,
+			ActualGoodsReceiptQtyInBaseUnit:              data.ActualGoodsReceiptQtyInBaseUnit,
 			ItemGrossWeight:                              data.ItemGrossWeight,
 			ItemNetWeight:                                data.ItemNetWeight,
 			ItemWeightUnit:                               data.ItemWeightUnit,
 			ItemIsBillingRelevant:                        data.ItemIsBillingRelevant,
-			LastChangeDate:                               data.LastChangeDate,
-			OrderID:                                      data.OrderID,
-			OrderItem:                                    data.OrderItem,
-			OrderType:                                    data.OrderType,
-			ContractType:                                 data.ContractType,
-			OrderValidityStartDate:                       data.OrderValidityStartDate,
-			OrderValidityEndDate:                         data.OrderValidityEndDate,
-			PaymentTerms:                                 data.PaymentTerms,
 			DueCalculationBaseDate:                       data.DueCalculationBaseDate,
 			PaymentDueDate:                               data.PaymentDueDate,
 			NetPaymentDays:                               data.NetPaymentDays,
-			PaymentMethod:                                data.PaymentMethod,
-			InvoicePeriodStartDate:                       data.InvoicePeriodStartDate,
-			InvoicePeriodEndDate:                         data.InvoicePeriodEndDate,
-			ProductAvailabilityDate:                      data.ProductAvailabilityDate,
-			Project:                                      data.Project,
-			ReferenceDocument:                            data.ReferenceDocument,
-			ReferenceDocumentItem:                        data.ReferenceDocumentItem,
-			BPTaxClassification:                          data.BPTaxClassification,
-			ProductTaxClassification:                     data.ProductTaxClassification,
-			BPAccountAssignmentGroup:                     data.BPAccountAssignmentGroup,
-			ProductAccountAssignmentGroup:                data.ProductAccountAssignmentGroup,
-			TaxCode:                                      data.TaxCode,
-			TaxRate:                                      data.TaxRate,
-			CountryOfOrigin:                              data.CountryOfOrigin,
-			StockIsFullyConfirmed:                        data.StockIsFullyConfirmed,
+			ItemDeliveryBlockStatus:                      data.ItemDeliveryBlockStatus,
+			ItemIssuingBlockStatus:                       data.ItemIssuingBlockStatus,
+			ItemReceivingBlockStatus:                     data.ItemReceivingBlockStatus,
+			ItemBillingBlockStatus:                       data.ItemBillingBlockStatus,
 		})
 	}
 
-	return item
+	return &item
+}
+
+func ConvertToAddressCreates(subfuncSDC *sub_func_complementer.SDC) *[]Address {
+	var address []Address
+
+	for _, data := range *subfuncSDC.Message.Address {
+		address = append(address, Address{
+			DeliveryDocument: data.DeliveryDocument,
+			AddressID:        data.AddressID,
+			PostalCode:       data.PostalCode,
+			LocalRegion:      data.LocalRegion,
+			Country:          data.Country,
+			District:         data.District,
+			StreetName:       data.StreetName,
+			CityName:         data.CityName,
+			Building:         data.Building,
+			Floor:            data.Floor,
+			Room:             data.Room,
+		})
+	}
+
+	return &address
+}
+
+func ConvertToAddressUpdates(addressUpdates *[]dpfm_api_processing_formatter.AddressUpdates) *[]Address {
+	var address []Address
+
+	for _, data := range *addressUpdates {
+		address = append(address, Address{
+			PostalCode:  data.PostalCode,
+			LocalRegion: data.LocalRegion,
+			Country:     data.Country,
+			District:    data.District,
+			StreetName:  data.StreetName,
+			CityName:    data.CityName,
+			Building:    data.Building,
+			Floor:       data.Floor,
+			Room:        data.Room,
+		})
+	}
+
+	return &address
 }
