@@ -118,7 +118,7 @@ func getAccepter(input *dpfm_api_input_reader.SDC) []string {
 
 	if accepter[0] == "All" {
 		accepter = []string{
-			"Header", "Item", "Partner",
+			"Header", "Item", "Partner", "Address",
 		}
 	}
 	return accepter
