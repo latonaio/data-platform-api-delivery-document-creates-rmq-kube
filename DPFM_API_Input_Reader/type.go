@@ -204,20 +204,26 @@ type Item struct {
 	BatchMgmtPolicyInDeliverToPlant               *string  `json:"BatchMgmtPolicyInDeliverToPlant"`
 	DeliverToPlantBatch                           *string  `json:"DeliverToPlantBatch"`
 	DeliverToPlantBatchValidityStartDate          *string  `json:"DeliverToPlantBatchValidityStartDate"`
+	DeliverToPlantBatchValidityStartTime          *string  `json:"DeliverToPlantBatchValidityStartTime"`
 	DeliverToPlantBatchValidityEndDate            *string  `json:"DeliverToPlantBatchValidityEndDate"`
+	DeliverToPlantBatchValidityEndTime            *string  `json:"DeliverToPlantBatchValidityEndTime"`
 	DeliverFromPlantStorageLocation               *string  `json:"DeliverFromPlantStorageLocation"`
 	ProductIsBatchManagedInDeliverFromPlant       *bool    `json:"ProductIsBatchManagedInDeliverFromPlant"`
 	BatchMgmtPolicyInDeliverFromPlant             *string  `json:"BatchMgmtPolicyInDeliverFromPlant"`
 	DeliverFromPlantBatch                         *string  `json:"DeliverFromPlantBatch"`
 	DeliverFromPlantBatchValidityStartDate        *string  `json:"DeliverFromPlantBatchValidityStartDate"`
+	DeliverFromPlantBatchValidityStartTime        *string  `json:"DeliverFromPlantBatchValidityStartTime"`
 	DeliverFromPlantBatchValidityEndDate          *string  `json:"DeliverFromPlantBatchValidityEndDate"`
+	DeliverFromPlantBatchValidityEndTime          *string  `json:"DeliverFromPlantBatchValidityEndTime"`
 	StockConfirmationBusinessPartner              *int     `json:"StockConfirmationBusinessPartner"`
 	StockConfirmationPlant                        *string  `json:"StockConfirmationPlant"`
 	ProductIsBatchManagedInStockConfirmationPlant *bool    `json:"ProductIsBatchManagedInStockConfirmationPlant"`
 	BatchMgmtPolicyInStockConfirmationPlant       *string  `json:"BatchMgmtPolicyInStockConfirmationPlant"`
 	StockConfirmationPlantBatch                   *string  `json:"StockConfirmationPlantBatch"`
 	StockConfirmationPlantBatchValidityStartDate  *string  `json:"StockConfirmationPlantBatchValidityStartDate"`
+	StockConfirmationPlantBatchValidityStartTime  *string  `json:"StockConfirmationPlantBatchValidityStartTime"`
 	StockConfirmationPlantBatchValidityEndDate    *string  `json:"StockConfirmationPlantBatchValidityEndDate"`
+	StockConfirmationPlantBatchValidityEndTime    *string  `json:"StockConfirmationPlantBatchValidityEndTime"`
 	StockConfirmationPolicy                       *string  `json:"StockConfirmationPolicy"`
 	StockConfirmationStatus                       *string  `json:"StockConfirmationStatus"`
 	ProductionPlantBusinessPartner                *int     `json:"ProductionPlantBusinessPartner"`
@@ -227,16 +233,26 @@ type Item struct {
 	BatchMgmtPolicyInProductionPlant              *string  `json:"BatchMgmtPolicyInProductionPlant"`
 	ProductionPlantBatch                          *string  `json:"ProductionPlantBatch"`
 	ProductionPlantBatchValidityStartDate         *string  `json:"ProductionPlantBatchValidityStartDate"`
+	ProductionPlantBatchValidityStartTime         *string  `json:"ProductionPlantBatchValidityStartTime"`
 	ProductionPlantBatchValidityEndDate           *string  `json:"ProductionPlantBatchValidityEndDate"`
+	ProductionPlantBatchValidityEndTime           *string  `json:"ProductionPlantBatchValidityEndTime"`
 	DeliveryDocumentItemText                      *string  `json:"DeliveryDocumentItemText"`
-	DeliveryDocumentItemTextByBuyer               string   `json:"DeliveryDocumentItemTextByBuyer"`
-	DeliveryDocumentItemTextBySeller              string   `json:"DeliveryDocumentItemTextBySeller"`
+	DeliveryDocumentItemTextByBuyer               *string  `json:"DeliveryDocumentItemTextByBuyer"`
+	DeliveryDocumentItemTextBySeller              *string  `json:"DeliveryDocumentItemTextBySeller"`
 	Product                                       *string  `json:"Product"`
 	ProductStandardID                             *string  `json:"ProductStandardID"`
 	ProductGroup                                  *string  `json:"ProductGroup"`
 	BaseUnit                                      *string  `json:"BaseUnit"`
 	OriginalQuantityInBaseUnit                    *float32 `json:"OriginalQuantityInBaseUnit"`
 	DeliveryUnit                                  *string  `json:"DeliveryUnit"`
+	PlannedGoodsIssueDate                         *string  `json:"PlannedGoodsIssueDate"`
+	PlannedGoodsIssueTime                         *string  `json:"PlannedGoodsIssueTime"`
+	PlannedGoodsReceiptDate                       *string  `json:"PlannedGoodsReceiptDate"`
+	PlannedGoodsReceiptTime                       *string  `json:"PlannedGoodsReceiptTime"`
+	PlannedGoodsIssueQuantity                     *float32 `json:"PlannedGoodsIssueQuantity"`
+	PlannedGoodsIssueQtyInBaseUnit                *float32 `json:"PlannedGoodsIssueQtyInBaseUnit"`
+	PlannedGoodsReceiptQuantity                   *float32 `json:"PlannedGoodsReceiptQuantity"`
+	PlannedGoodsReceiptQtyInBaseUnit              *float32 `json:"PlannedGoodsReceiptQtyInBaseUnit"`
 	ActualGoodsIssueDate                          *string  `json:"ActualGoodsIssueDate"`
 	ActualGoodsIssueTime                          *string  `json:"ActualGoodsIssueTime"`
 	ActualGoodsReceiptDate                        *string  `json:"ActualGoodsReceiptDate"`
@@ -250,12 +266,12 @@ type Item struct {
 	LastChangeDate                                *string  `json:"LastChangeDate"`
 	LastChangeTime                                *string  `json:"LastChangeTime"`
 	ItemBillingStatus                             *string  `json:"ItemBillingStatus"`
-	SalesCostGLAccount                            *string  `json:"SalesCostGLAccount"`
-	ReceivingGLAccount                            *string  `json:"ReceivingGLAccount"`
 	ItemCompleteDeliveryIsDefined                 *bool    `json:"ItemCompleteDeliveryIsDefined"`
 	ItemGrossWeight                               *float32 `json:"ItemGrossWeight"`
 	ItemNetWeight                                 *float32 `json:"ItemNetWeight"`
 	ItemWeightUnit                                *string  `json:"ItemWeightUnit"`
+	InternalCapacityQuantity                      *float32 `json:"InternalCapacityQuantity"`
+	InternalCapacityQuantityUnit                  *string  `json:"InternalCapacityQuantityUnit"`
 	ItemIsBillingRelevant                         *bool    `json:"ItemIsBillingRelevant"`
 	NetAmount                                     *float32 `json:"NetAmount"`
 	TaxAmount                                     *float32 `json:"TaxAmount"`

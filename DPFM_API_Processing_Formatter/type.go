@@ -74,9 +74,19 @@ type ItemUpdates struct {
 	ActualGoodsIssueQtyInBaseUnit                *float32 `json:"ActualGoodsIssueQtyInBaseUnit"`
 	ActualGoodsReceiptQuantity                   *float32 `json:"ActualGoodsReceiptQuantity"`
 	ActualGoodsReceiptQtyInBaseUnit              *float32 `json:"ActualGoodsReceiptQtyInBaseUnit"`
+	PlannedGoodsIssueDate                        *string  `json:"PlannedGoodsIssueDate"`
+	PlannedGoodsIssueTime                        *string  `json:"PlannedGoodsIssueTime"`
+	PlannedGoodsReceiptDate                      *string  `json:"PlannedGoodsReceiptDate"`
+	PlannedGoodsReceiptTime                      *string  `json:"PlannedGoodsReceiptTime"`
+	PlannedGoodsIssueQuantity                    *float32 `json:"PlannedGoodsIssueQuantity"`
+	PlannedGoodsIssueQtyInBaseUnit               *float32 `json:"PlannedGoodsIssueQtyInBaseUnit"`
+	PlannedGoodsReceiptQuantity                  *float32 `json:"PlannedGoodsReceiptQuantity"`
+	PlannedGoodsReceiptQtyInBaseUnit             *float32 `json:"PlannedGoodsReceiptQtyInBaseUnit"`
 	ItemGrossWeight                              *float32 `json:"ItemGrossWeight"`
 	ItemNetWeight                                *float32 `json:"ItemNetWeight"`
 	ItemWeightUnit                               *string  `json:"ItemWeightUnit"`
+	InternalCapacityQuantity                     *float32 `json:"InternalCapacityQuantity"`
+	InternalCapacityQuantityUnit                 *string  `json:"InternalCapacityQuantityUnit"`
 	ItemIsBillingRelevant                        *bool    `json:"ItemIsBillingRelevant"`
 	DueCalculationBaseDate                       *string  `json:"DueCalculationBaseDate"`
 	PaymentDueDate                               *string  `json:"PaymentDueDate"`
