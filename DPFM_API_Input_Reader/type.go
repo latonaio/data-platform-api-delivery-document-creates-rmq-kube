@@ -143,7 +143,7 @@ type Header struct {
 	HeaderReceivingBlockStatus             *bool     `json:"HeaderReceivingBlockStatus"`
 	IsCancelled                            *bool     `json:"IsCancelled"`
 	IsMarkedForDeletion                    *bool     `json:"IsMarkedForDeletion"`
-	Item                                   []Item    `json:"DeliveryDocumentItem"`
+	Item                                   []Item    `json:"Item"`
 	Partner                                []Partner `json:"Partner"`
 	Address                                []Address `json:"Address"`
 }
@@ -236,6 +236,9 @@ type Item struct {
 	ProductionPlantBatchValidityStartTime         *string  `json:"ProductionPlantBatchValidityStartTime"`
 	ProductionPlantBatchValidityEndDate           *string  `json:"ProductionPlantBatchValidityEndDate"`
 	ProductionPlantBatchValidityEndTime           *string  `json:"ProductionPlantBatchValidityEndTime"`
+	InspectionPlan                                *int     `json:"InspectionPlan"`
+	InspectionPlant                               *string  `json:"InspectionPlant"`
+	InspectionOrder                               *int     `json:"InspectionOrder"`
 	DeliveryDocumentItemText                      *string  `json:"DeliveryDocumentItemText"`
 	DeliveryDocumentItemTextByBuyer               *string  `json:"DeliveryDocumentItemTextByBuyer"`
 	DeliveryDocumentItemTextBySeller              *string  `json:"DeliveryDocumentItemTextBySeller"`

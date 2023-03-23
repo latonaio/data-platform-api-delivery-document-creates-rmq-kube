@@ -175,6 +175,9 @@ type Item struct {
 	ProductionPlantBatchValidityStartTime         *string  `json:"ProductionPlantBatchValidityStartTime"`
 	ProductionPlantBatchValidityEndDate           *string  `json:"ProductionPlantBatchValidityEndDate"`
 	ProductionPlantBatchValidityEndTime           *string  `json:"ProductionPlantBatchValidityEndTime"`
+	InspectionPlan                                *int     `json:"InspectionPlan"`
+	InspectionPlant                               *string  `json:"InspectionPlant"`
+	InspectionOrder                               *int     `json:"InspectionOrder"`
 	DeliveryDocumentItemText                      *string  `json:"DeliveryDocumentItemText"`
 	DeliveryDocumentItemTextByBuyer               string   `json:"DeliveryDocumentItemTextByBuyer"`
 	DeliveryDocumentItemTextBySeller              string   `json:"DeliveryDocumentItemTextBySeller"`
@@ -248,4 +251,11 @@ type Item struct {
 	ItemBillingBlockStatus                        *bool    `json:"ItemBillingBlockStatus"`
 	IsCancelled                                   *bool    `json:"IsCancelled"`
 	IsMarkedForDeletion                           *bool    `json:"IsMarkedForDeletion"`
+}
+
+type NumberRange struct {
+	NumberRangeID            string `json:"NumberRangeID"`
+	ServiceLabel             string `json:"ServiceLabel"`
+	FieldNameWithNumberRange string `json:"FieldNameWithNumberRange"`
+	LatestNumber             int    `json:"LatestNumber"`
 }

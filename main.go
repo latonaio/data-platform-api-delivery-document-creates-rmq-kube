@@ -40,7 +40,7 @@ func main() {
 	defer rmq.Stop()
 
 	confirmor := existence_conf.NewExistenceConf(ctx, conf, rmq, db)
-	complementer := sub_func_complementer.NewSubFuncComplementer(ctx, conf, rmq)
+	complementer := sub_func_complementer.NewSubFuncComplementer(ctx, conf, rmq, db)
 	caller := dpfm_api_caller.NewDPFMAPICaller(conf, rmq, confirmor, complementer)
 
 	for msg := range iter {

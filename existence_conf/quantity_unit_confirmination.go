@@ -8,18 +8,14 @@ import (
 	"golang.org/x/xerrors"
 )
 
-func (c *ExistenceConf) quantityUnitExistenceConf(mapper ExConfMapper, input *dpfm_api_input_reader.SDC, existenceMap *[]bool, exconfErrMsg *string, errs *[]error, mtx *sync.Mutex, wg *sync.WaitGroup, log *logger.Logger) {
+func (c *ExistenceConf) itemQuantityUnitExistenceConf(mapper ExConfMapper, input *dpfm_api_input_reader.SDC, existenceMap *[]bool, exconfErrMsg *string, errs *[]error, mtx *sync.Mutex, wg *sync.WaitGroup, log *logger.Logger) {
 	defer wg.Done()
 	wg2 := sync.WaitGroup{}
 	exReqTimes := 0
 
 	items := input.Header.Item
 	for _, item := range items {
-		quantityUnit, err := getQuantityUnitExistenceConfKey(mapper, &item, exconfErrMsg)
-		if err != nil {
-			*errs = append(*errs, err)
-			return
-		}
+		quantityUnit := getItemQuantityUnitExistenceConfKey(mapper, &item, exconfErrMsg)
 		queueName, err := getQueueName(mapper)
 		if err != nil {
 			*errs = append(*errs, err)
@@ -28,6 +24,10 @@ func (c *ExistenceConf) quantityUnitExistenceConf(mapper ExConfMapper, input *dp
 		wg2.Add(1)
 		exReqTimes++
 		go func() {
+			if isZero(quantityUnit) {
+				wg2.Done()
+				return
+			}
 			res, err := c.quantityUnitExistenceConfRequest(quantityUnit, queueName, input, existenceMap, mtx, log)
 			if err != nil {
 				mtx.Lock()
@@ -73,18 +73,23 @@ func (c *ExistenceConf) quantityUnitExistenceConfRequest(quantityUnit string, qu
 	return "", nil
 }
 
-func getQuantityUnitExistenceConfKey(mapper ExConfMapper, item *dpfm_api_input_reader.Item, exconfErrMsg *string) (string, error) {
+func getItemQuantityUnitExistenceConfKey(mapper ExConfMapper, item *dpfm_api_input_reader.Item, exconfErrMsg *string) string {
 	var quantityUnit string
-	var err error
 
 	switch mapper.Field {
 	case "ItemWeightUnit":
 		if item.ItemWeightUnit == nil {
-			err = xerrors.Errorf("cannot specify null keys")
-			return "", err
+			quantityUnit = ""
+		} else {
+			quantityUnit = *item.ItemWeightUnit
 		}
-		quantityUnit = *item.ItemWeightUnit
+	case "InternalCapacityQuantityUnit":
+		if item.InternalCapacityQuantityUnit == nil {
+			quantityUnit = ""
+		} else {
+			quantityUnit = *item.InternalCapacityQuantityUnit
+		}
 	}
 
-	return quantityUnit, nil
+	return quantityUnit
 }

@@ -15,11 +15,7 @@ func (c *ExistenceConf) itemBatchExistenceConf(mapper ExConfMapper, input *dpfm_
 
 	items := input.Header.Item
 	for _, item := range items {
-		bpID, product, plant, batch, err := getItemBatchExistenceConfKey(mapper, &item, exconfErrMsg)
-		if err != nil {
-			*errs = append(*errs, err)
-			return
-		}
+		bpID, product, plant, batch := getItemBatchExistenceConfKey(mapper, &item, exconfErrMsg)
 		queueName, err := getQueueName(mapper)
 		if err != nil {
 			*errs = append(*errs, err)
@@ -28,6 +24,10 @@ func (c *ExistenceConf) itemBatchExistenceConf(mapper ExConfMapper, input *dpfm_
 		wg2.Add(1)
 		exReqTimes++
 		go func() {
+			if isZero(bpID) || isZero(product) || isZero(plant) || isZero(batch) {
+				wg2.Done()
+				return
+			}
 			res, err := c.batchExistenceConfRequest(bpID, product, plant, batch, queueName, input, existenceMap, mtx, log)
 			if err != nil {
 				mtx.Lock()
@@ -79,12 +79,11 @@ func (c *ExistenceConf) batchExistenceConfRequest(bpID int, product string, plan
 	return "", nil
 }
 
-func getItemBatchExistenceConfKey(mapper ExConfMapper, item *dpfm_api_input_reader.Item, exconfErrMsg *string) (int, string, string, string, error) {
+func getItemBatchExistenceConfKey(mapper ExConfMapper, item *dpfm_api_input_reader.Item, exconfErrMsg *string) (int, string, string, string) {
 	var bpID int
 	var product string
 	var plant string
 	var batch string
-	var err error
 
 	switch mapper.Field {
 	case "DeliverToPlantBatch":
@@ -92,93 +91,65 @@ func getItemBatchExistenceConfKey(mapper ExConfMapper, item *dpfm_api_input_read
 			item.Product == nil ||
 			item.DeliverToPlant == nil ||
 			item.DeliverToPlantBatch == nil {
-			err = xerrors.Errorf("cannot specify null keys")
-			return 0, "", "", "", err
+			bpID = 0
+			product = ""
+			plant = ""
+			batch = ""
+		} else {
+			bpID = *item.DeliverToParty
+			product = *item.Product
+			plant = *item.DeliverToPlant
+			batch = *item.DeliverToPlantBatch
 		}
-		if item.Product != nil ||
-			item.DeliverToPlant != nil ||
-			item.DeliverToPlantBatch != nil {
-			if len(*item.Product) == 0 ||
-				len(*item.DeliverToPlant) == 0 ||
-				len(*item.DeliverToPlantBatch) == 0 {
-				err = xerrors.Errorf("cannot specify null keys")
-				return 0, "", "", "", err
-			}
-		}
-		bpID = *item.DeliverToParty
-		product = *item.Product
-		plant = *item.DeliverToPlant
-		batch = *item.DeliverToPlantBatch
 
 	case "DeliverFromPlantBatch":
 		if item.DeliverFromParty == nil ||
 			item.Product == nil ||
 			item.DeliverFromPlant == nil ||
 			item.DeliverFromPlantBatch == nil {
-			err = xerrors.Errorf("cannot specify null keys")
-			return 0, "", "", "", err
+			bpID = 0
+			product = ""
+			plant = ""
+			batch = ""
+		} else {
+			bpID = *item.DeliverFromParty
+			product = *item.Product
+			plant = *item.DeliverFromPlant
+			batch = *item.DeliverFromPlantBatch
 		}
-		if item.Product != nil ||
-			item.DeliverFromPlant != nil ||
-			item.DeliverFromPlantBatch != nil {
-			if len(*item.Product) == 0 ||
-				len(*item.DeliverFromPlant) == 0 ||
-				len(*item.DeliverFromPlantBatch) == 0 {
-				err = xerrors.Errorf("cannot specify null keys")
-				return 0, "", "", "", err
-			}
-		}
-		bpID = *item.DeliverFromParty
-		product = *item.Product
-		plant = *item.DeliverFromPlant
-		batch = *item.DeliverFromPlantBatch
 
 	case "StockConfirmationPlantBatch":
 		if item.StockConfirmationBusinessPartner == nil ||
 			item.Product == nil ||
 			item.StockConfirmationPlant == nil ||
 			item.StockConfirmationPlantBatch == nil {
-			err = xerrors.Errorf("cannot specify null keys")
-			return 0, "", "", "", err
+			bpID = 0
+			product = ""
+			plant = ""
+			batch = ""
+		} else {
+			bpID = *item.StockConfirmationBusinessPartner
+			product = *item.Product
+			plant = *item.StockConfirmationPlant
+			batch = *item.StockConfirmationPlantBatch
 		}
-		if item.Product != nil ||
-			item.StockConfirmationPlant != nil ||
-			item.StockConfirmationPlantBatch != nil {
-			if len(*item.Product) == 0 ||
-				len(*item.StockConfirmationPlant) == 0 ||
-				len(*item.StockConfirmationPlantBatch) == 0 {
-				err = xerrors.Errorf("cannot specify null keys")
-				return 0, "", "", "", err
-			}
-		}
-		bpID = *item.StockConfirmationBusinessPartner
-		product = *item.Product
-		plant = *item.StockConfirmationPlant
-		batch = *item.StockConfirmationPlantBatch
 
 	case "ProductionPlantBatch":
 		if item.ProductionPlantBusinessPartner == nil ||
 			item.Product == nil ||
 			item.ProductionPlant == nil ||
 			item.ProductionPlantBatch == nil {
-			err = xerrors.Errorf("cannot specify null keys")
-			return 0, "", "", "", err
+			bpID = 0
+			product = ""
+			plant = ""
+			batch = ""
+		} else {
+			bpID = *item.ProductionPlantBusinessPartner
+			product = *item.Product
+			plant = *item.ProductionPlant
+			batch = *item.ProductionPlantBatch
 		}
-		if item.Product != nil ||
-			item.ProductionPlant != nil ||
-			item.ProductionPlantBatch != nil {
-			if len(*item.Product) == 0 ||
-				len(*item.ProductionPlant) == 0 ||
-				len(*item.ProductionPlantBatch) == 0 {
-				err = xerrors.Errorf("cannot specify null keys")
-				return 0, "", "", "", err
-			}
-		}
-		bpID = *item.ProductionPlantBusinessPartner
-		product = *item.Product
-		plant = *item.ProductionPlant
-		batch = *item.ProductionPlantBatch
 	}
 
-	return bpID, product, plant, batch, nil
+	return bpID, product, plant, batch
 }

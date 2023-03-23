@@ -26,9 +26,9 @@ type SDC struct {
 
 type Message struct {
 	Header  *[]Header  `json:"Header"`
+	Item    *[]Item    `json:"Item"`
 	Partner *[]Partner `json:"Partner"`
 	Address *[]Address `json:"Address"`
-	Item    *[]Item    `json:"Item"`
 }
 
 type Header struct {
@@ -86,34 +86,6 @@ type Header struct {
 	HeaderReceivingBlockStatus             *bool    `json:"HeaderReceivingBlockStatus"`
 	IsCancelled                            *bool    `json:"IsCancelled"`
 	IsMarkedForDeletion                    *bool    `json:"IsMarkedForDeletion"`
-}
-
-type Partner struct {
-	DeliveryDocument        int     `json:"DeliveryDocument"`
-	PartnerFunction         string  `json:"PartnerFunction"`
-	BusinessPartner         int     `json:"BusinessPartner"`
-	BusinessPartnerFullName *string `json:"BusinessPartnerFullName"`
-	BusinessPartnerName     *string `json:"BusinessPartnerName"`
-	Organization            *string `json:"Organization"`
-	Country                 *string `json:"Country"`
-	Language                *string `json:"Language"`
-	Currency                *string `json:"Currency"`
-	ExternalDocumentID      *string `json:"ExternalDocumentID"`
-	AddressID               *int    `json:"AddressID"`
-}
-
-type Address struct {
-	DeliveryDocument int     `json:"DeliveryDocument"`
-	AddressID        int     `json:"AddressID"`
-	PostalCode       *string `json:"PostalCode"`
-	LocalRegion      *string `json:"LocalRegion"`
-	Country          *string `json:"Country"`
-	District         *string `json:"District"`
-	StreetName       *string `json:"StreetName"`
-	CityName         *string `json:"CityName"`
-	Building         *string `json:"Building"`
-	Floor            *int    `json:"Floor"`
-	Room             *int    `json:"Room"`
 }
 
 type Item struct {
@@ -176,6 +148,9 @@ type Item struct {
 	ProductionPlantBatchValidityStartTime         *string  `json:"ProductionPlantBatchValidityStartTime"`
 	ProductionPlantBatchValidityEndDate           *string  `json:"ProductionPlantBatchValidityEndDate"`
 	ProductionPlantBatchValidityEndTime           *string  `json:"ProductionPlantBatchValidityEndTime"`
+	InspectionPlan                                *int     `json:"InspectionPlan"`
+	InspectionPlant                               *string  `json:"InspectionPlant"`
+	InspectionOrder                               *int     `json:"InspectionOrder"`
 	DeliveryDocumentItemText                      *string  `json:"DeliveryDocumentItemText"`
 	DeliveryDocumentItemTextByBuyer               string   `json:"DeliveryDocumentItemTextByBuyer"`
 	DeliveryDocumentItemTextBySeller              string   `json:"DeliveryDocumentItemTextBySeller"`
@@ -249,4 +224,32 @@ type Item struct {
 	ItemBillingBlockStatus                        *bool    `json:"ItemBillingBlockStatus"`
 	IsCancelled                                   *bool    `json:"IsCancelled"`
 	IsMarkedForDeletion                           *bool    `json:"IsMarkedForDeletion"`
+}
+
+type Partner struct {
+	DeliveryDocument        int     `json:"DeliveryDocument"`
+	PartnerFunction         string  `json:"PartnerFunction"`
+	BusinessPartner         int     `json:"BusinessPartner"`
+	BusinessPartnerFullName *string `json:"BusinessPartnerFullName"`
+	BusinessPartnerName     *string `json:"BusinessPartnerName"`
+	Organization            *string `json:"Organization"`
+	Country                 *string `json:"Country"`
+	Language                *string `json:"Language"`
+	Currency                *string `json:"Currency"`
+	ExternalDocumentID      *string `json:"ExternalDocumentID"`
+	AddressID               *int    `json:"AddressID"`
+}
+
+type Address struct {
+	DeliveryDocument int     `json:"DeliveryDocument"`
+	AddressID        int     `json:"AddressID"`
+	PostalCode       *string `json:"PostalCode"`
+	LocalRegion      *string `json:"LocalRegion"`
+	Country          *string `json:"Country"`
+	District         *string `json:"District"`
+	StreetName       *string `json:"StreetName"`
+	CityName         *string `json:"CityName"`
+	Building         *string `json:"Building"`
+	Floor            *int    `json:"Floor"`
+	Room             *int    `json:"Room"`
 }

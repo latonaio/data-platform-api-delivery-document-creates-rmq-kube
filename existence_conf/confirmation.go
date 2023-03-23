@@ -57,9 +57,6 @@ func (c *ExistenceConf) Conf(data *dpfm_api_input_reader.SDC, ssdc *dpfm_api_out
 			continue
 		}
 		switch tabletag {
-		// case "ProductMasterGeneral":
-		// 	wg.Add(1)
-		// 	go c.productExistenceConf(v, data, &existenceMap, &resMsg, &errs, mtx, &wg, l)
 		case "BusinessPartnerGeneral":
 			switch apiName {
 			case "Header":
@@ -70,35 +67,44 @@ func (c *ExistenceConf) Conf(data *dpfm_api_input_reader.SDC, ssdc *dpfm_api_out
 				go c.itemBPGeneralExistenceConf(v, data, &existenceMap, &resMsg, &errs, mtx, &wg, l)
 			}
 		case "PlantGeneral":
-			wg.Add(1)
-			go c.headerPlantGeneralExistenceConf(v, data, &existenceMap, &resMsg, &errs, mtx, &wg, l)
-		// case "Address":
-		// 	wg.Add(1)
-		// 	go c.addressExistenceConf(v, data, &existenceMap, &resMsg, &errs, mtx, &wg, l)
-		// case "Currency":
-		// 	wg.Add(1)
-		// 	go c.currencyExistenceConf(v, data, &existenceMap, &resMsg, &errs, mtx, &wg, l)
+			switch apiName {
+			case "Header":
+				wg.Add(1)
+				go c.headerPlantGeneralExistenceConf(v, data, &existenceMap, &resMsg, &errs, mtx, &wg, l)
+			case "Item":
+				wg.Add(1)
+				go c.itemPlantGeneralExistenceConf(v, data, &existenceMap, &resMsg, &errs, mtx, &wg, l)
+			}
 		case "Incoterms":
 			wg.Add(1)
 			go c.headerIncotermsExistenceConf(v, data, &existenceMap, &resMsg, &errs, mtx, &wg, l)
+		case "Country":
+			wg.Add(1)
+			go c.headerCountryExistenceConf(v, data, &existenceMap, &resMsg, &errs, mtx, &wg, l)
 		case "QuantityUnit":
 			wg.Add(1)
-			go c.quantityUnitExistenceConf(v, data, &existenceMap, &resMsg, &errs, mtx, &wg, l)
-			// case "PaymentMethod":
-			// 	wg.Add(1)
-			// 	go c.paymentMethodExistenceConf(v, data, &existenceMap, &resMsg, &errs, mtx, &wg, l)
-			// case "PaymentTerms":
-			// 	wg.Add(1)
-			// 	go c.paymentTermsExistenceConf(v, data, &existenceMap, &resMsg, &errs, mtx, &wg, l)
-			// case "SupplyChainRelationshipGeneral":
-			// 	wg.Add(1)
-			// 	go c.supplyChainRelationshipGeneralExistenceConf(v, data, &existenceMap, &resMsg, &errs, mtx, &wg, l)
-			// case "SupplyChainRelationshipBillingRelation":
-			// 	wg.Add(1)
-			// 	go c.supplyChainRelationshipBillingRelationExistenceConf(v, data, &existenceMap, &resMsg, &errs, mtx, &wg, l)
-			// case "SupplyChainRelationshipPaymentRelation":
-			// 	wg.Add(1)
-			// 	go c.supplyChainRelationshipPaymentRelationExistenceConf(v, data, &existenceMap, &resMsg, &errs, mtx, &wg, l)
+			go c.itemQuantityUnitExistenceConf(v, data, &existenceMap, &resMsg, &errs, mtx, &wg, l)
+		case "SupplyChainRelationshipGeneral":
+			wg.Add(1)
+			go c.supplyChainRelationshipGeneralExistenceConf(v, data, &existenceMap, &resMsg, &errs, mtx, &wg, l)
+		case "SupplyChainRelationshipBillingRelation":
+			wg.Add(1)
+			go c.supplyChainRelationshipBillingRelationExistenceConf(v, data, &existenceMap, &resMsg, &errs, mtx, &wg, l)
+		case "SupplyChainRelationshipPaymentRelation":
+			wg.Add(1)
+			go c.supplyChainRelationshipPaymentRelationExistenceConf(v, data, &existenceMap, &resMsg, &errs, mtx, &wg, l)
+		case "SupplyChainRelationshipDeliveryRelation":
+			wg.Add(1)
+			go c.supplyChainRelationshipDeliveryRelationExistenceConf(v, data, &existenceMap, &resMsg, &errs, mtx, &wg, l)
+		case "SupplyChainRelationshipDeliveryPlantRelation":
+			wg.Add(1)
+			go c.supplyChainRelationshipDeliveryPlantRelationExistenceConf(v, data, &existenceMap, &resMsg, &errs, mtx, &wg, l)
+		case "SupplyChainRelationshipProductionPlantRelation":
+			wg.Add(1)
+			go c.supplyChainRelationshipProductionPlantRelationExistenceConf(v, data, &existenceMap, &resMsg, &errs, mtx, &wg, l)
+		case "SupplyChainRelationshipStockConfPlantRelation":
+			wg.Add(1)
+			go c.supplyChainRelationshipStockConfPlantRelationExistenceConf(v, data, &existenceMap, &resMsg, &errs, mtx, &wg, l)
 		case "Batch":
 			wg.Add(1)
 			go c.itemBatchExistenceConf(v, data, &existenceMap, &resMsg, &errs, mtx, &wg, l)
@@ -245,4 +251,9 @@ func contains(slice []string, target string) bool {
 		}
 	}
 	return false
+}
+
+func isZero[T comparable](obj T) bool {
+	var zero T
+	return obj == zero
 }

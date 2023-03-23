@@ -8,7 +8,7 @@ import (
 	"golang.org/x/xerrors"
 )
 
-func (c *ExistenceConf) headerIncotermsExistenceConf(mapper ExConfMapper, input *dpfm_api_input_reader.SDC, existenceMap *[]bool, exconfErrMsg *string, errs *[]error, mtx *sync.Mutex, wg *sync.WaitGroup, log *logger.Logger) {
+func (c *ExistenceConf) headerCountryExistenceConf(mapper ExConfMapper, input *dpfm_api_input_reader.SDC, existenceMap *[]bool, exconfErrMsg *string, errs *[]error, mtx *sync.Mutex, wg *sync.WaitGroup, log *logger.Logger) {
 	defer wg.Done()
 	wg2 := sync.WaitGroup{}
 	exReqTimes := 0
@@ -16,7 +16,7 @@ func (c *ExistenceConf) headerIncotermsExistenceConf(mapper ExConfMapper, input 
 	headers := make([]dpfm_api_input_reader.Header, 0, 1)
 	headers = append(headers, input.Header)
 	for _, header := range headers {
-		incoterms := getHeaderIncotermsExistenceConfKey(mapper, &header, exconfErrMsg)
+		country := getHeaderCountryExistenceConfKey(mapper, &header, exconfErrMsg)
 		queueName, err := getQueueName(mapper)
 		if err != nil {
 			*errs = append(*errs, err)
@@ -25,11 +25,11 @@ func (c *ExistenceConf) headerIncotermsExistenceConf(mapper ExConfMapper, input 
 		wg2.Add(1)
 		exReqTimes++
 		go func() {
-			if isZero(incoterms) {
+			if isZero(country) {
 				wg2.Done()
 				return
 			}
-			res, err := c.incotermsExistenceConfRequest(incoterms, queueName, input, existenceMap, mtx, log)
+			res, err := c.countryExistenceConfRequest(country, queueName, input, existenceMap, mtx, log)
 			if err != nil {
 				mtx.Lock()
 				*errs = append(*errs, err)
@@ -47,9 +47,9 @@ func (c *ExistenceConf) headerIncotermsExistenceConf(mapper ExConfMapper, input 
 	}
 }
 
-func (c *ExistenceConf) incotermsExistenceConfRequest(incoterms string, queueName string, input *dpfm_api_input_reader.SDC, existenceMap *[]bool, mtx *sync.Mutex, log *logger.Logger) (string, error) {
+func (c *ExistenceConf) countryExistenceConfRequest(country string, queueName string, input *dpfm_api_input_reader.SDC, existenceMap *[]bool, mtx *sync.Mutex, log *logger.Logger) (string, error) {
 	keys := newResult(map[string]interface{}{
-		"Incoterms": incoterms,
+		"Country": country,
 	})
 	exist := false
 	defer func() {
@@ -62,7 +62,7 @@ func (c *ExistenceConf) incotermsExistenceConfRequest(incoterms string, queueNam
 	if err != nil {
 		return "", xerrors.Errorf("request create error: %w", err)
 	}
-	req.IncotermsReturn.Incoterms = incoterms
+	req.CountryReturn.Country = country
 
 	exist, err = c.exconfRequest(req, queueName, log)
 	if err != nil {
@@ -74,17 +74,24 @@ func (c *ExistenceConf) incotermsExistenceConfRequest(incoterms string, queueNam
 	return "", nil
 }
 
-func getHeaderIncotermsExistenceConfKey(mapper ExConfMapper, header *dpfm_api_input_reader.Header, exconfErrMsg *string) string {
-	var incoterms string
+func getHeaderCountryExistenceConfKey(mapper ExConfMapper, header *dpfm_api_input_reader.Header, exconfErrMsg *string) string {
+	var country string
 
 	switch mapper.Field {
-	case "Incoterms":
-		if header.Incoterms == nil {
-			incoterms = ""
+	case "BillToCountry":
+		if header.BillToCountry == nil {
+			country = ""
 		} else {
-			incoterms = *header.Incoterms
+			country = *header.BillToCountry
+		}
+
+	case "BillFromCountry":
+		if header.BillFromCountry == nil {
+			country = ""
+		} else {
+			country = *header.BillFromCountry
 		}
 	}
 
-	return incoterms
+	return country
 }

@@ -79,7 +79,14 @@ func (c *DPFMAPICaller) AsyncDeliveryDocumentCreates(
 		return nil, nil
 	}
 	wg.Wait()
-	for range accepter {
+
+	var loopCnt int
+	if input.APIType == "creates" {
+		loopCnt = len(accepter)
+	} else if input.APIType == "updates" {
+		loopCnt = 1
+	}
+	for i := 0; i < loopCnt; i++ {
 		if err := c.finWait(&mtx, subFuncFin, ticker); err != nil || len(errs) != 0 {
 			if err != nil {
 				errs = append(errs, err)
