@@ -1,7 +1,9 @@
 # data-platform-api-delivery-document-creates-rmq-kube
 
-data-platform-api-delivery-document-creates-rmq-kube は、周辺業務システム　を データ連携基盤 と統合することを目的に、API で入出荷データを取得するマイクロサービスです。  
-https://xxx.xxx.io/api/API_DELIVERY_DOCUMENT_SRV/creates/
+data-platform-api-delivery-document-creates-rmq-kube は、周辺業務システム　を データ連携基盤 と統合することを目的に、API で入出荷データを登録/更新するマイクロサービスです。
+
+* https://xxx.xxx.io/api/API_DELIVERY_DOCUMENT_SRV/creates/
+* https://xxx.xxx.io/api/API_DELIVERY_DOCUMENT_SRV/updates/
 
 ## 動作環境
 
@@ -13,7 +15,8 @@ data-platform-api-delivery-document-creates-rmq-kube の動作環境は、次の
 ## 本レポジトリ が 対応する API サービス
 data-platform-api-delivery-document-creates-rmq-kube が対応する APIサービス は、次のものです。
 
-APIサービス URL: https://xxx.xxx.io/api/API_DELIVERY_DOCUMENT_SRV/creates/
+* APIサービス URL: https://xxx.xxx.io/api/API_DELIVERY_DOCUMENT_SRV/creates/
+* APIサービス URL: https://xxx.xxx.io/api/API_DELIVERY_DOCUMENT_SRV/updates/
 
 ## 本レポジトリ に 含まれる API名
 data-platform-api-delivery-document-creates-rmq-kube には、次の API をコールするためのリソースが含まれています。  
@@ -39,8 +42,6 @@ accepter において 下記の例のように、データの種別（＝APIの�
 ```
 	"api_schema": "DPFMDeliveryDocumentCreates",
 	"accepter": ["Header"],
-	"delivery_document_id": null,
-	"deleted": false
 ```
   
 * 全データを取得する際のsample.jsonの記載例(2)  
@@ -50,8 +51,6 @@ accepter において 下記の例のように、データの種別（＝APIの�
 ```
 	"api_schema": "DPFMDeliveryDocumentCreates",
 	"accepter": ["All"],
-	"delivery_document_id": null,
-	"deleted": false
 ```
 
 ## 指定されたデータ種別のコール
@@ -60,7 +59,7 @@ accepter における データ種別 の指定に基づいて DPFM_API_Caller �
 caller.go の func() 毎 の 以下の箇所が、指定された API をコールするソースコードです。  
 
 ```
-func (c *DPFMAPICaller) AsyncDeliveryDocumentCreates(
+func (c *DPFMAPICaller) AsyncCreates(
 	accepter []string,
 	input *dpfm_api_input_reader.SDC,
 
@@ -104,7 +103,7 @@ func (c *DPFMAPICaller) AsyncDeliveryDocumentCreates(
 
 ## Output  
 本マイクロサービスでは、[golang-logging-library-for-data-platform](https://github.com/latonaio/golang-logging-library-for-data-platform) により、以下のようなデータがJSON形式で出力されます。  
-以下の sample.json の例は 入出荷 の ヘッダデータ が取得された結果の JSON の例です。  
+以下の sample.json の例は 入出荷 の ヘッダデータ が登録/更新された結果の JSON の例です。  
 以下の項目のうち、"DeliveryDocument" ～ "PlusMinusFlag" は、/DPFM_API_Output_Formatter/type.go 内 の Type Header {} による出力結果です。"cursor" ～ "time"は、golang-logging-library による 定型フォーマットの出力結果です。  
 
 ```
