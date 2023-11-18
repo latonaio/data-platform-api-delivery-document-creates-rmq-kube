@@ -80,6 +80,7 @@ func (c *SubFuncComplementer) ComplementItem(input *dpfm_api_input_reader.SDC, s
 	subfuncSDC.Message.Item = msg.Item
 	subfuncSDC.Message.Partner = msg.Partner
 	subfuncSDC.Message.Address = msg.Address
+	subfuncSDC.Message.ItemPicking = msg.ItemPicking
 
 	return err
 }

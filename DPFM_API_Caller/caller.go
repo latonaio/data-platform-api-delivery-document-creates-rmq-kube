@@ -160,6 +160,13 @@ func (c *DPFMAPICaller) subfuncProcess(
 			} else {
 				c.itemCreate(mtx, wg, subFuncFin, input, output, subfuncSDC, errs, log)
 			}
+		case "ItemPicking":
+			if contains(accepter, "Item") {
+				subFuncFin <- nil
+			} else {
+				c.itemCreate(mtx, wg, subFuncFin, input, output, subfuncSDC, errs, log)
+			}
+
 		default:
 			wg.Done()
 		}

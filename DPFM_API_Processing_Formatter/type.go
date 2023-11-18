@@ -1,52 +1,55 @@
 package dpfm_api_processing_formatter
 
 type HeaderUpdates struct {
-	DeliveryDocument                       int     `json:"DeliveryDocument"`
-	DeliveryDocumentDate     			   *string `json:"DeliveryDocumentDate"`
-	PlannedGoodsIssueDate                  *string `json:"PlannedGoodsIssueDate"`
-	PlannedGoodsIssueTime                  *string `json:"PlannedGoodsIssueTime"`
-	PlannedGoodsReceiptDate                *string `json:"PlannedGoodsReceiptDate"`
-	PlannedGoodsReceiptTime                *string `json:"PlannedGoodsReceiptTime"`
-	InvoiceDocumentDate                    *string `json:"InvoiceDocumentDate"`
-	HeaderBillingBlockStatus			   *string `json:"HeaderBillingBlockStatus"`
-	GoodsIssueOrReceiptSlipNumber		   *string `json:"GoodsIssueOrReceiptSlipNumber"`
-	Incoterms							   *string `json:"Incoterms"`
-	HeaderDeliveryBlockStatus			   *string `json:"HeaderDeliveryBlockStatus"`
-	HeaderIssuingBlockStatus			   *string `json:"HeaderIssuingBlockStatus"`
-	HeaderReceivingBlockStatus			   *string `json:"HeaderReceivingBlockStatus"`
-	}
+	DeliveryDocument              int     `json:"DeliveryDocument"`
+	DeliveryDocumentDate          *string `json:"DeliveryDocumentDate"`
+	PlannedGoodsIssueDate         *string `json:"PlannedGoodsIssueDate"`
+	PlannedGoodsIssueTime         *string `json:"PlannedGoodsIssueTime"`
+	PlannedGoodsReceiptDate       *string `json:"PlannedGoodsReceiptDate"`
+	PlannedGoodsReceiptTime       *string `json:"PlannedGoodsReceiptTime"`
+	InvoiceDocumentDate           *string `json:"InvoiceDocumentDate"`
+	HeaderBillingBlockStatus      *string `json:"HeaderBillingBlockStatus"`
+	GoodsIssueOrReceiptSlipNumber *string `json:"GoodsIssueOrReceiptSlipNumber"`
+	Incoterms                     *string `json:"Incoterms"`
+	HeaderDeliveryBlockStatus     *string `json:"HeaderDeliveryBlockStatus"`
+	HeaderIssuingBlockStatus      *string `json:"HeaderIssuingBlockStatus"`
+	HeaderReceivingBlockStatus    *string `json:"HeaderReceivingBlockStatus"`
+	ExternalReferenceDocument     *string `json:"ExternalReferenceDocument"`
+}
 
 type ItemUpdates struct {
-	DeliveryDocument                        int     `json:"DeliveryDocument"`
-	DeliveryDocumentItem                    int     `json:"DeliveryDocumentItem"`
-	DeliverToPlantStorageLocation           *string `json:"DeliverToPlantStorageLocation"`
-	DeliverFromPlantStorageLocation         *string `json:"DeliverFromPlantStorageLocation"`
-	PlannedGoodsIssueDate            		*string  `json:"PlannedGoodsIssueDate"`
-	PlannedGoodsIssueTime            		*string  `json:"PlannedGoodsIssueTime"`
-	PlannedGoodsReceiptDate          		*string  `json:"PlannedGoodsReceiptDate"`
-	PlannedGoodsReceiptTime          		*string  `json:"PlannedGoodsReceiptTime"`
-	PlannedGoodsIssueQuantity        		*float32 `json:"PlannedGoodsIssueQuantity"`
-	PlannedGoodsIssueQtyInBaseUnit   		*float32 `json:"PlannedGoodsIssueQtyInBaseUnit"`
-	PlannedGoodsReceiptQuantity      		*float32 `json:"PlannedGoodsReceiptQuantity"`
-	PlannedGoodsReceiptQtyInBaseUnit 		*float32 `json:"PlannedGoodsReceiptQtyInBaseUnit"`
-	ActualGoodsIssueDate            		*string  `json:"ActualGoodsIssueDate"`
-	ActualGoodsIssueTime            		*string  `json:"ActualGoodsIssueTime"`
-	ActualGoodsReceiptDate          		*string  `json:"ActualGoodsReceiptDate"`
-	ActualGoodsReceiptTime          		*string  `json:"ActualGoodsReceiptTime"`
-	ActualGoodsIssueQuantity        		*float32 `json:"ActualGoodsIssueQuantity"`
-	ActualGoodsIssueQtyInBaseUnit   		*float32 `json:"ActualGoodsIssueQtyInBaseUnit"`
-	ActualGoodsReceiptQuantity      		*float32 `json:"ActualGoodsReceiptQuantity"`
-	ActualGoodsReceiptQtyInBaseUnit 		*float32 `json:"ActualGoodsReceiptQtyInBaseUnit"`
-	ItemGrossWeight              			*float32 `json:"ItemGrossWeight"`
-	ItemNetWeight                			*float32 `json:"ItemNetWeight"`
-	ItemWeightUnit               			*string  `json:"ItemWeightUnit"`
-	DueCalculationBaseDate       			*string  `json:"DueCalculationBaseDate"`
-	PaymentDueDate               			*string  `json:"PaymentDueDate"`
-	NetPaymentDays               			*int     `json:"NetPaymentDays"`
-	ItemDeliveryBlockStatus      			*bool    `json:"ItemDeliveryBlockStatus"`
-	ItemIssuingBlockStatus       			*bool    `json:"ItemIssuingBlockStatus"`
-	ItemReceivingBlockStatus     			*bool    `json:"ItemReceivingBlockStatus"`
-	ItemBillingBlockStatus       			*bool    `json:"ItemBillingBlockStatus"`
+	DeliveryDocument                 int      `json:"DeliveryDocument"`
+	DeliveryDocumentItem             int      `json:"DeliveryDocumentItem"`
+	DeliverToPlantStorageLocation    *string  `json:"DeliverToPlantStorageLocation"`
+	DeliverFromPlantStorageLocation  *string  `json:"DeliverFromPlantStorageLocation"`
+	PlannedGoodsIssueDate            *string  `json:"PlannedGoodsIssueDate"`
+	PlannedGoodsIssueTime            *string  `json:"PlannedGoodsIssueTime"`
+	PlannedGoodsReceiptDate          *string  `json:"PlannedGoodsReceiptDate"`
+	PlannedGoodsReceiptTime          *string  `json:"PlannedGoodsReceiptTime"`
+	PlannedGoodsIssueQuantity        *float32 `json:"PlannedGoodsIssueQuantity"`
+	PlannedGoodsIssueQtyInBaseUnit   *float32 `json:"PlannedGoodsIssueQtyInBaseUnit"`
+	PlannedGoodsReceiptQuantity      *float32 `json:"PlannedGoodsReceiptQuantity"`
+	PlannedGoodsReceiptQtyInBaseUnit *float32 `json:"PlannedGoodsReceiptQtyInBaseUnit"`
+	ActualGoodsIssueDate             *string  `json:"ActualGoodsIssueDate"`
+	ActualGoodsIssueTime             *string  `json:"ActualGoodsIssueTime"`
+	ActualGoodsReceiptDate           *string  `json:"ActualGoodsReceiptDate"`
+	ActualGoodsReceiptTime           *string  `json:"ActualGoodsReceiptTime"`
+	ActualGoodsIssueQuantity         *float32 `json:"ActualGoodsIssueQuantity"`
+	ActualGoodsIssueQtyInBaseUnit    *float32 `json:"ActualGoodsIssueQtyInBaseUnit"`
+	ActualGoodsReceiptQuantity       *float32 `json:"ActualGoodsReceiptQuantity"`
+	ActualGoodsReceiptQtyInBaseUnit  *float32 `json:"ActualGoodsReceiptQtyInBaseUnit"`
+	ItemGrossWeight                  *float32 `json:"ItemGrossWeight"`
+	ItemNetWeight                    *float32 `json:"ItemNetWeight"`
+	ItemWeightUnit                   *string  `json:"ItemWeightUnit"`
+	DueCalculationBaseDate           *string  `json:"DueCalculationBaseDate"`
+	PaymentDueDate                   *string  `json:"PaymentDueDate"`
+	NetPaymentDays                   *int     `json:"NetPaymentDays"`
+	ItemDeliveryBlockStatus          *bool    `json:"ItemDeliveryBlockStatus"`
+	ItemIssuingBlockStatus           *bool    `json:"ItemIssuingBlockStatus"`
+	ItemReceivingBlockStatus         *bool    `json:"ItemReceivingBlockStatus"`
+	ItemBillingBlockStatus           *bool    `json:"ItemBillingBlockStatus"`
+	ExternalReferenceDocument        *string  `json:"ExternalReferenceDocument"`
+	ExternalReferenceDocumentItem    *string  `json:"ExternalReferenceDocumentItem"`
 }
 
 type PartnerUpdates struct {
@@ -73,4 +76,24 @@ type AddressUpdates struct {
 	Building         *string `json:"Building"`
 	Floor            *int    `json:"Floor"`
 	Room             *int    `json:"Room"`
+}
+
+type ItemPickingUpdates struct {
+	DeliveryDocument                                 int      `json:"DeliveryDocument"`
+	DeliveryDocumentItem                             int      `json:"DeliverToPlantStorageBin"`
+	DeliveryDocumentItemPickingID                    int      `json:"DeliverFromPlantStorageBin"`
+	DeliverToPlantStorageBin                         *string  `json:"DeliverToPlantStorageBin"`
+	DeliverFromPlantStorageBin                       *string  `json:"DeliverFromPlantStorageBin"`
+	DeliverToPlantPlannedPickingQuantityInBaseUnit   *float32 `json:"DeliverToPlantPlannedPickingQuantityInBaseUnit"`
+	DeliverFromPlantPlannedPickingQuantityInBaseUnit *float32 `json:"DeliverFromPlantPlannedPickingQuantityInBaseUnit"`
+	DeliverToPlantPlannedPickingDate                 *string  `json:"DeliverToPlantPlannedPickingDate"`
+	DeliverToPlantPlannedPickingTime                 *string  `json:"DeliverToPlantPlannedPickingTime"`
+	DeliverFromPlantPlannedPickingDate               *string  `json:"DeliverFromPlantPlannedPickingDate"`
+	DeliverFromPlantPlannedPickingTime               *string  `json:"DeliverFromPlantPlannedPickingTime"`
+	DeliverToPlantActualPickingQuantityInBaseUnit    *float32 `json:"DeliverToPlantActualPickingQuantityInBaseUnit"`
+	DeliverToPlantActualPickingDate                  *string  `json:"DeliverToPlantActualPickingDate"`
+	DeliverToPlantActualPickingTime                  *string  `json:"DeliverToPlantActualPickingTime"`
+	DeliverFromPlantActualPickingQuantityInBaseUnit  *float32 `json:"DeliverFromPlantActualPickingQuantityInBaseUnit"`
+	DeliverFromPlantActualPickingDate                *string  `json:"DeliverFromPlantActualPickingDate"`
+	DeliverFromPlantActualPickingTime                *string  `json:"DeliverFromPlantActualPickingTime"`
 }

@@ -26,6 +26,7 @@ func (c *DPFMAPICaller) createSqlProcess(
 	var item *[]dpfm_api_output_formatter.Item
 	var partner *[]dpfm_api_output_formatter.Partner
 	var address *[]dpfm_api_output_formatter.Address
+	var itemPicking *[]dpfm_api_output_formatter.ItemPicking
 	for _, fn := range accepter {
 		switch fn {
 		case "Header":
@@ -36,16 +37,19 @@ func (c *DPFMAPICaller) createSqlProcess(
 			partner = c.partnerCreateSql(nil, mtx, input, output, subfuncSDC, errs, log)
 		case "Address":
 			address = c.addressCreateSql(nil, mtx, input, output, subfuncSDC, errs, log)
+		case "ItemPicking":
+			itemPicking = c.itemPickingCreateSql(nil, mtx, input, output, subfuncSDC, errs, log)
 		default:
 
 		}
 	}
 
 	data := &dpfm_api_output_formatter.Message{
-		Header:  header,
-		Item:    item,
-		Partner: partner,
-		Address: address,
+		Header:      header,
+		Item:        item,
+		Partner:     partner,
+		Address:     address,
+		ItemPicking: itemPicking,
 	}
 
 	return data
@@ -64,6 +68,7 @@ func (c *DPFMAPICaller) updateSqlProcess(
 	var item *[]dpfm_api_output_formatter.Item
 	var partner *[]dpfm_api_output_formatter.Partner
 	var address *[]dpfm_api_output_formatter.Address
+	var ItemPicking *[]dpfm_api_output_formatter.ItemPicking
 	for _, fn := range accepter {
 		switch fn {
 		case "Header":
@@ -74,16 +79,19 @@ func (c *DPFMAPICaller) updateSqlProcess(
 			partner = c.partnerUpdateSql(mtx, input, output, errs, log)
 		case "Address":
 			address = c.addressUpdateSql(mtx, input, output, errs, log)
+		case "ItemPicking":
+			itemPicking = c.itemPickingUpdateSql(mtx, input, output, errs, log)
 		default:
 
 		}
 	}
 
 	data := &dpfm_api_output_formatter.Message{
-		Header:  header,
-		Item:    item,
-		Partner: partner,
-		Address: address,
+		Header:      header,
+		Item:        item,
+		Partner:     partner,
+		Address:     address,
+		ItemPicking: itemPicking,
 	}
 
 	return data
@@ -249,6 +257,48 @@ func (c *DPFMAPICaller) addressCreateSql(
 	}
 
 	data, err := dpfm_api_output_formatter.ConvertToAddressCreates(subfuncSDC)
+	if err != nil {
+		*errs = append(*errs, err)
+		return nil
+	}
+
+	return data
+}
+
+func (c *DPFMAPICaller) itemPickingCreateSql(
+	ctx context.Context,
+	mtx *sync.Mutex,
+	input *dpfm_api_input_reader.SDC,
+	output *dpfm_api_output_formatter.SDC,
+	subfuncSDC *sub_func_complementer.SDC,
+	errs *[]error,
+	log *logger.Logger,
+) *[]dpfm_api_output_formatter.ItemPicking {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	sessionID := input.RuntimeSessionID
+	// data_platform_delivery_document_item_picking_dataの更新
+	for _, itemPickingData := range *subfuncSDC.Message.ItemPicking {
+		res, err := c.rmq.SessionKeepRequest(ctx, c.conf.RMQ.QueueToSQL()[0], map[string]interface{}{"message": itemPickingData, "function": "DeliveryDocumentItemPicking", "runtime_session_id": sessionID})
+		if err != nil {
+			err = xerrors.Errorf("rmq error: %w", err)
+			*errs = append(*errs, err)
+			return nil
+		}
+		res.Success()
+		if !checkResult(res) {
+			output.SQLUpdateResult = getBoolPtr(false)
+			output.SQLUpdateError = "ItemPicking Data cannot insert"
+			return nil
+		}
+	}
+
+	if output.SQLUpdateResult == nil {
+		output.SQLUpdateResult = getBoolPtr(true)
+	}
+
+	data, err := dpfm_api_output_formatter.ConvertToItemPickingCreates(subfuncSDC)
 	if err != nil {
 		*errs = append(*errs, err)
 		return nil
@@ -428,6 +478,50 @@ func (c *DPFMAPICaller) addressUpdateSql(
 	return data
 }
 
+func (c *DPFMAPICaller) itemPickingUpdateSql(
+	mtx *sync.Mutex,
+	input *dpfm_api_input_reader.SDC,
+	output *dpfm_api_output_formatter.SDC,
+	errs *[]error,
+	log *logger.Logger,
+) *[]dpfm_api_output_formatter.ItemPicking {
+	req := make([]dpfm_api_processing_formatter.ItemPickingUpdates, 0)
+	sessionID := input.RuntimeSessionID
+
+	header := input.Header
+	for _, itemPicking := range header.ItemPicking {
+		itemPickingData := *dpfm_api_processing_formatter.ConvertToItemPickingUpdates(header, itemPicking)
+
+		if itemPickingIsUpdate(&itemPickingData) {
+			res, err := c.rmq.SessionKeepRequest(nil, c.conf.RMQ.QueueToSQL()[0], map[string]interface{}{"message": itemPickingData, "function": "DeliveryDocumentItemPicking", "runtime_session_id": sessionID})
+			if err != nil {
+				err = xerrors.Errorf("rmq error: %w", err)
+				*errs = append(*errs, err)
+				return nil
+			}
+			res.Success()
+			if !checkResult(res) {
+				output.SQLUpdateResult = getBoolPtr(false)
+				output.SQLUpdateError = "ItemPicking Data cannot insert"
+				return nil
+			}
+		}
+		req = append(req, itemPickingData)
+	}
+
+	if output.SQLUpdateResult == nil {
+		output.SQLUpdateResult = getBoolPtr(true)
+	}
+
+	data, err := dpfm_api_output_formatter.ConvertToItemPickingUpdates(&req)
+	if err != nil {
+		*errs = append(*errs, err)
+		return nil
+	}
+
+	return data
+}
+
 func headerIsUpdate(header *dpfm_api_processing_formatter.HeaderUpdates) bool {
 	deliveryDocument := header.DeliveryDocument
 
@@ -454,4 +548,12 @@ func addressIsUpdate(address *dpfm_api_processing_formatter.AddressUpdates) bool
 	addressID := address.AddressID
 
 	return !(deliveryDocument == 0 || addressID == 0)
+}
+
+func itemPickingIsUpdate(itemPicking *dpfm_api_processing_formatter.ItemPickingUpdates) bool {
+	deliveryDocument := itemPicking.DeliveryDocument
+	DeliveryDocumentItem := itemPicking.DeliveryDocumentItem
+	DeliveryDocumentItemPickingID := itemPicking.DeliveryDocumentItemPickingID
+
+	return !(deliveryDocument == 0 || DeliveryDocumentItem == 0)
 }

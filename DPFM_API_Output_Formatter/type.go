@@ -25,73 +25,75 @@ type SDC struct {
 }
 
 type Message struct {
-	Header  *[]Header  `json:"Header"`
-	Item    *[]Item    `json:"Item"`
-	Partner *[]Partner `json:"Partner"`
-	Address *[]Address `json:"Address"`
+	Header      *[]Header      `json:"Header"`
+	Item        *[]Item        `json:"Item"`
+	Partner     *[]Partner     `json:"Partner"`
+	Address     *[]Address     `json:"Address"`
+	ItemPicking *[]ItemPicking `json:"ItemPicking"`
 }
 
-
-	DeliveryDocument                       int       `json:"DeliveryDocument"`
-	SupplyChainRelationshipID              int       `json:"SupplyChainRelationshipID"`
-	SupplyChainRelationshipDeliveryID      int       `json:"SupplyChainRelationshipDeliveryID"`
-	SupplyChainRelationshipDeliveryPlantID int       `json:"SupplyChainRelationshipDeliveryPlantID"`
-	SupplyChainRelationshipBillingID       *int      `json:"SupplyChainRelationshipBillingID"`
-	SupplyChainRelationshipPaymentID       *int      `json:"SupplyChainRelationshipPaymentID"`
-	Buyer                                  int       `json:"Buyer"`
-	Seller                                 int       `json:"Seller"`
-	DeliverToParty                         int       `json:"DeliverToParty"`
-	DeliverFromParty                       int       `json:"DeliverFromParty"`
-	DeliverToPlant                         string    `json:"DeliverToPlant"`
-	DeliverFromPlant                       string    `json:"DeliverFromPlant"`
-	BillToParty                            *int      `json:"BillToParty"`
-	BillFromParty                          *int      `json:"BillFromParty"`
-	BillToCountry                          *string   `json:"BillToCountry"`
-	BillFromCountry                        *string   `json:"BillFromCountry"`
-	Payer                                  *int      `json:"Payer"`
-	Payee                                  *int      `json:"Payee"`
-	IsExportImport                         *bool     `json:"IsExportImport"`
-	DeliverToPlantTimeZone                 *string   `json:"DeliverToPlantTimeZone"`
-	DeliverFromPlantTimeZone               *string   `json:"DeliverFromPlantTimeZone"`
-	ReferenceDocument                      *int      `json:"ReferenceDocument"`
-	ReferenceDocumentItem                  *int      `json:"ReferenceDocumentItem"`
-	OrderID                                *int      `json:"OrderID"`
-	OrderItem                              *int      `json:"OrderItem"`
-	ProductionOrder                        *int      `json:"ProductionOrder"`
-	ProductionOrderItem                    *int      `json:"ProductionOrderItem"`
-	Operations                        	   *int      `json:"Operations"`
-	OperationsItem                    	   *int      `json:"OperationsItem"`
-	BillOfMaterial                    	   *int      `json:"BillOfMaterial"`
-	BillOfMaterialItem                 	   *int      `json:"BillOfMaterialItem"`
-	ContractType                           *string   `json:"ContractType"`
-	OrderValidityStartDate                 *string   `json:"OrderValidityStartDate"`
-	OrderValidityEndDate                   *string   `json:"OrderValidityEndDate"`
-	DeliveryDocumentDate                   string    `json:"DeliveryDocumentDate"`
-	PlannedGoodsIssueDate                  string    `json:"PlannedGoodsIssueDate"`
-	PlannedGoodsIssueTime                  string    `json:"PlannedGoodsIssueTime"`
-	PlannedGoodsReceiptDate                string    `json:"PlannedGoodsReceiptDate"`
-	PlannedGoodsReceiptTime                string    `json:"PlannedGoodsReceiptTime"`
-	InvoiceDocumentDate                    *string   `json:"InvoiceDocumentDate"`
-	HeaderCompleteDeliveryIsDefined        *bool     `json:"HeaderCompleteDeliveryIsDefined"`
-	HeaderDeliveryStatus                   *string   `json:"HeaderDeliveryStatus"`
-	GoodsIssueOrReceiptSlipNumber          *string   `json:"GoodsIssueOrReceiptSlipNumber"`
-	HeaderBillingStatus                    *string   `json:"HeaderBillingStatus"`
-	HeaderBillingConfStatus                *string   `json:"HeaderBillingConfStatus"`
-	HeaderBillingBlockStatus               *bool     `json:"HeaderBillingBlockStatus"`
-	HeaderGrossWeight                      *float32  `json:"HeaderGrossWeight"`
-	HeaderNetWeight                        *float32  `json:"HeaderNetWeight"`
-	HeaderWeightUnit                       *string   `json:"HeaderWeightUnit"`
-	Incoterms                              *string   `json:"Incoterms"`
-	TransactionCurrency                    *string   `json:"TransactionCurrency"`
-	HeaderDeliveryBlockStatus              *bool     `json:"HeaderDeliveryBlockStatus"`
-	HeaderIssuingBlockStatus               *bool     `json:"HeaderIssuingBlockStatus"`
-	HeaderReceivingBlockStatus             *bool     `json:"HeaderReceivingBlockStatus"`
-	CreationDate                           string    `json:"CreationDate"`
-	CreationTime                           string    `json:"CreationTime"`
-	LastChangeDate                         string    `json:"LastChangeDate"`
-	LastChangeTime                         string    `json:"LastChangeTime"`
-	IsCancelled                            *bool     `json:"IsCancelled"`
-	IsMarkedForDeletion                    *bool     `json:"IsMarkedForDeletion"`
+type Header struct {
+	DeliveryDocument                       int      `json:"DeliveryDocument"`
+	SupplyChainRelationshipID              int      `json:"SupplyChainRelationshipID"`
+	SupplyChainRelationshipDeliveryID      int      `json:"SupplyChainRelationshipDeliveryID"`
+	SupplyChainRelationshipDeliveryPlantID int      `json:"SupplyChainRelationshipDeliveryPlantID"`
+	SupplyChainRelationshipBillingID       *int     `json:"SupplyChainRelationshipBillingID"`
+	SupplyChainRelationshipPaymentID       *int     `json:"SupplyChainRelationshipPaymentID"`
+	Buyer                                  int      `json:"Buyer"`
+	Seller                                 int      `json:"Seller"`
+	DeliverToParty                         int      `json:"DeliverToParty"`
+	DeliverFromParty                       int      `json:"DeliverFromParty"`
+	DeliverToPlant                         string   `json:"DeliverToPlant"`
+	DeliverFromPlant                       string   `json:"DeliverFromPlant"`
+	BillToParty                            *int     `json:"BillToParty"`
+	BillFromParty                          *int     `json:"BillFromParty"`
+	BillToCountry                          *string  `json:"BillToCountry"`
+	BillFromCountry                        *string  `json:"BillFromCountry"`
+	Payer                                  *int     `json:"Payer"`
+	Payee                                  *int     `json:"Payee"`
+	IsExportImport                         *bool    `json:"IsExportImport"`
+	DeliverToPlantTimeZone                 *string  `json:"DeliverToPlantTimeZone"`
+	DeliverFromPlantTimeZone               *string  `json:"DeliverFromPlantTimeZone"`
+	ReferenceDocument                      *int     `json:"ReferenceDocument"`
+	ReferenceDocumentItem                  *int     `json:"ReferenceDocumentItem"`
+	OrderID                                *int     `json:"OrderID"`
+	OrderItem                              *int     `json:"OrderItem"`
+	ProductionOrder                        *int     `json:"ProductionOrder"`
+	ProductionOrderItem                    *int     `json:"ProductionOrderItem"`
+	Operations                             *int     `json:"Operations"`
+	OperationsItem                         *int     `json:"OperationsItem"`
+	BillOfMaterial                         *int     `json:"BillOfMaterial"`
+	BillOfMaterialItem                     *int     `json:"BillOfMaterialItem"`
+	ContractType                           *string  `json:"ContractType"`
+	OrderValidityStartDate                 *string  `json:"OrderValidityStartDate"`
+	OrderValidityEndDate                   *string  `json:"OrderValidityEndDate"`
+	DeliveryDocumentDate                   string   `json:"DeliveryDocumentDate"`
+	PlannedGoodsIssueDate                  string   `json:"PlannedGoodsIssueDate"`
+	PlannedGoodsIssueTime                  string   `json:"PlannedGoodsIssueTime"`
+	PlannedGoodsReceiptDate                string   `json:"PlannedGoodsReceiptDate"`
+	PlannedGoodsReceiptTime                string   `json:"PlannedGoodsReceiptTime"`
+	InvoiceDocumentDate                    *string  `json:"InvoiceDocumentDate"`
+	HeaderCompleteDeliveryIsDefined        *bool    `json:"HeaderCompleteDeliveryIsDefined"`
+	HeaderDeliveryStatus                   *string  `json:"HeaderDeliveryStatus"`
+	GoodsIssueOrReceiptSlipNumber          *string  `json:"GoodsIssueOrReceiptSlipNumber"`
+	HeaderBillingStatus                    *string  `json:"HeaderBillingStatus"`
+	HeaderBillingConfStatus                *string  `json:"HeaderBillingConfStatus"`
+	HeaderBillingBlockStatus               *bool    `json:"HeaderBillingBlockStatus"`
+	HeaderGrossWeight                      *float32 `json:"HeaderGrossWeight"`
+	HeaderNetWeight                        *float32 `json:"HeaderNetWeight"`
+	HeaderWeightUnit                       *string  `json:"HeaderWeightUnit"`
+	Incoterms                              *string  `json:"Incoterms"`
+	TransactionCurrency                    *string  `json:"TransactionCurrency"`
+	HeaderDeliveryBlockStatus              *bool    `json:"HeaderDeliveryBlockStatus"`
+	HeaderIssuingBlockStatus               *bool    `json:"HeaderIssuingBlockStatus"`
+	HeaderReceivingBlockStatus             *bool    `json:"HeaderReceivingBlockStatus"`
+	ExternalReferenceDocument              *string  `json:"ExternalReferenceDocument"`
+	CreationDate                           string   `json:"CreationDate"`
+	CreationTime                           string   `json:"CreationTime"`
+	LastChangeDate                         string   `json:"LastChangeDate"`
+	LastChangeTime                         string   `json:"LastChangeTime"`
+	IsCancelled                            *bool    `json:"IsCancelled"`
+	IsMarkedForDeletion                    *bool    `json:"IsMarkedForDeletion"`
 }
 
 type Item struct {
@@ -161,9 +163,9 @@ type Item struct {
 	ProductionPlantBatchValidityStartTime         *string  `json:"ProductionPlantBatchValidityStartTime"`
 	ProductionPlantBatchValidityEndDate           *string  `json:"ProductionPlantBatchValidityEndDate"`
 	ProductionPlantBatchValidityEndTime           *string  `json:"ProductionPlantBatchValidityEndTime"`
-	InspectionPlan								  *int	   `json:"InspectionPlan"`
-	InspectionPlant								  *string  `json:"InspectionPlant"`
-	InspectionOrder								  *int	   `json:"InspectionOrder"`
+	InspectionPlan                                *int     `json:"InspectionPlan"`
+	InspectionPlant                               *string  `json:"InspectionPlant"`
+	InspectionOrder                               *int     `json:"InspectionOrder"`
 	DeliveryDocumentItemText                      *string  `json:"DeliveryDocumentItemText"`
 	DeliveryDocumentItemTextByBuyer               *string  `json:"DeliveryDocumentItemTextByBuyer"`
 	DeliveryDocumentItemTextBySeller              *string  `json:"DeliveryDocumentItemTextBySeller"`
@@ -234,6 +236,8 @@ type Item struct {
 	ItemIssuingBlockStatus                        *bool    `json:"ItemIssuingBlockStatus"`
 	ItemReceivingBlockStatus                      *bool    `json:"ItemReceivingBlockStatus"`
 	ItemBillingBlockStatus                        *bool    `json:"ItemBillingBlockStatus"`
+	ExternalReferenceDocument                     *string  `json:"ExternalReferenceDocument"`
+	ExternalReferenceDocumentItem                 *string  `json:"ExternalReferenceDocumentItem"`
 	CreationDate                                  string   `json:"CreationDate"`
 	CreationTime                                  string   `json:"CreationTime"`
 	LastChangeDate                                string   `json:"LastChangeDate"`
@@ -268,4 +272,42 @@ type Address struct {
 	Building         *string `json:"Building"`
 	Floor            *int    `json:"Floor"`
 	Room             *int    `json:"Room"`
+}
+
+type ItemPicking struct {
+	DeliveryDocument                                 int      `json:"DeliveryDocument"`
+	DeliveryDocumentItem                             int      `json:"DeliveryDocumentItem"`
+	DeliveryDocumentItemPickingID                    int      `json:"DeliveryDocumentItemPickingID"`
+	SupplyChainRelationshipID                        *int     `json:"SupplyChainRelationshipID"`
+	SupplyChainRelationshipDeliveryID                *int     `json:"SupplyChainRelationshipDeliveryID"`
+	SupplyChainRelationshipDeliveryPlantID           *int     `json:"SupplyChainRelationshipDeliveryPlantID"`
+	Buyer                                            *int     `json:"Buyer"`
+	Seller                                           *int     `json:"Seller"`
+	Product                                          *string  `json:"Product"`
+	DeliverToParty                                   *int     `json:"DeliverToParty"`
+	DeliverToPlant                                   *string  `json:"DeliverToPlant"`
+	DeliverToPlantStorageLocation                    *string  `json:"DeliverToPlantStorageLocation"`
+	DeliverToPlantStorageBin                         *string  `json:"DeliverToPlantStorageBin"`
+	DeliverFromParty                                 *int     `json:"DeliverFromParty"`
+	DeliverFromPlant                                 *string  `json:"DeliverFromPlant"`
+	DeliverFromPlantStorageLocation                  *string  `json:"DeliverFromPlantStorageLocation"`
+	DeliverFromPlantStorageBin                       *string  `json:"DeliverFromPlantStorageBin"`
+	DeliverToPlantPlannedPickingQuantityInBaseUnit   *float32 `json:"DeliverToPlantPlannedPickingQuantityInBaseUnit"`
+	DeliverFromPlantPlannedPickingQuantityInBaseUnit *float32 `json:"DeliverFromPlantPlannedPickingQuantityInBaseUnit"`
+	DeliverToPlantPlannedPickingDate                 *string  `json:"DeliverToPlantPlannedPickingDate"`
+	DeliverToPlantPlannedPickingTime                 *string  `json:"DeliverToPlantPlannedPickingTime"`
+	DeliverFromPlantPlannedPickingDate               *string  `json:"DeliverFromPlantPlannedPickingDate"`
+	DeliverFromPlantPlannedPickingTime               *string  `json:"DeliverFromPlantPlannedPickingTime"`
+	DeliverToPlantActualPickingQuantityInBaseUnit    *float32 `json:"DeliverToPlantActualPickingQuantityInBaseUnit"`
+	DeliverToPlantActualPickingDate                  *string  `json:"DeliverToPlantActualPickingDate"`
+	DeliverToPlantActualPickingTime                  *string  `json:"DeliverToPlantActualPickingTime"`
+	DeliverFromPlantActualPickingQuantityInBaseUnit  *float32 `json:"DeliverFromPlantActualPickingQuantityInBaseUnit"`
+	DeliverFromPlantActualPickingDate                *string  `json:"DeliverFromPlantActualPickingDate"`
+	DeliverFromPlantActualPickingTime                *string  `json:"DeliverFromPlantActualPickingTime"`
+	CreationDate                                     *string  `json:"CreationDate"`
+	CreationTime                                     *string  `json:"CreationTime"`
+	LastChangeDate                                   *string  `json:"LastChangeDate"`
+	LastChangeTime                                   *string  `json:"LastChangeTime"`
+	IsCancelled                                      *bool    `json:"IsCancelled"`
+	IsMarkedForDeletion                              *bool    `json:"IsMarkedForDeletion"`
 }

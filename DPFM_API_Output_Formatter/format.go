@@ -69,6 +69,21 @@ func ConvertToAddressCreates(subfuncSDC *sub_func_complementer.SDC) (*[]Address,
 	return &addresses, nil
 }
 
+func ConvertToItemPickingCreates(subfuncSDC *sub_func_complementer.SDC) (*[]ItemPicking, error) {
+	itemPickings := make([]ItemPicking, 0)
+
+	for _, data := range *subfuncSDC.Message.ItemPicking {
+		itemPicking, err := TypeConverter[*ItemPicking](data)
+		if err != nil {
+			return nil, err
+		}
+
+		itemPickings = append(itemPickings, *itemPicking)
+	}
+
+	return &itemPickings, nil
+}
+
 func ConvertToHeaderUpdates(headerData dpfm_api_input_reader.Header) (*[]Header, error) {
 	headers := make([]Header, 0)
 	data := headerData
@@ -125,6 +140,21 @@ func ConvertToAddressUpdates(addressUpdates *[]dpfm_api_processing_formatter.Add
 	}
 
 	return &addresses, nil
+}
+
+func ConvertToItemPickingUpdates(itemPickingUpdates *[]dpfm_api_processing_formatter.ItemPickingUpdates) (*[]ItemPicking, error) {
+	itemPickings := make([]ItemPicking, 0)
+
+	for _, data := range *itemPickingUpdates {
+		itemPicking, err := TypeConverter[*ItemPicking](data)
+		if err != nil {
+			return nil, err
+		}
+
+		itemPickings = append(itemPickings, *itemPicking)
+	}
+
+	return &itemPickings, nil
 }
 
 func TypeConverter[T any](data interface{}) (T, error) {
