@@ -68,7 +68,7 @@ func (c *DPFMAPICaller) updateSqlProcess(
 	var item *[]dpfm_api_output_formatter.Item
 	var partner *[]dpfm_api_output_formatter.Partner
 	var address *[]dpfm_api_output_formatter.Address
-	var ItemPicking *[]dpfm_api_output_formatter.ItemPicking
+	//var ItemPicking *[]dpfm_api_output_formatter.ItemPicking
 	for _, fn := range accepter {
 		switch fn {
 		case "Header":
@@ -79,19 +79,19 @@ func (c *DPFMAPICaller) updateSqlProcess(
 			partner = c.partnerUpdateSql(mtx, input, output, errs, log)
 		case "Address":
 			address = c.addressUpdateSql(mtx, input, output, errs, log)
-		case "ItemPicking":
-			itemPicking = c.itemPickingUpdateSql(mtx, input, output, errs, log)
+		//case "ItemPicking":
+		//	itemPicking = c.itemPickingUpdateSql(mtx, input, output, errs, log)
 		default:
 
 		}
 	}
 
 	data := &dpfm_api_output_formatter.Message{
-		Header:      header,
-		Item:        item,
-		Partner:     partner,
-		Address:     address,
-		ItemPicking: itemPicking,
+		Header:  header,
+		Item:    item,
+		Partner: partner,
+		Address: address,
+		//ItemPicking: itemPicking,
 	}
 
 	return data
@@ -486,28 +486,28 @@ func (c *DPFMAPICaller) itemPickingUpdateSql(
 	log *logger.Logger,
 ) *[]dpfm_api_output_formatter.ItemPicking {
 	req := make([]dpfm_api_processing_formatter.ItemPickingUpdates, 0)
-	sessionID := input.RuntimeSessionID
+	//sessionID := input.RuntimeSessionID
 
-	header := input.Header
-	for _, itemPicking := range header.ItemPicking {
-		itemPickingData := *dpfm_api_processing_formatter.ConvertToItemPickingUpdates(header, itemPicking)
-
-		if itemPickingIsUpdate(&itemPickingData) {
-			res, err := c.rmq.SessionKeepRequest(nil, c.conf.RMQ.QueueToSQL()[0], map[string]interface{}{"message": itemPickingData, "function": "DeliveryDocumentItemPicking", "runtime_session_id": sessionID})
-			if err != nil {
-				err = xerrors.Errorf("rmq error: %w", err)
-				*errs = append(*errs, err)
-				return nil
-			}
-			res.Success()
-			if !checkResult(res) {
-				output.SQLUpdateResult = getBoolPtr(false)
-				output.SQLUpdateError = "ItemPicking Data cannot insert"
-				return nil
-			}
-		}
-		req = append(req, itemPickingData)
-	}
+	//header := input.Header
+	//for _, itemPicking := range header.ItemPicking {
+	//	itemPickingData := *dpfm_api_processing_formatter.ConvertToItemPickingUpdates(header, itemPicking)
+	//
+	//	if itemPickingIsUpdate(&itemPickingData) {
+	//		res, err := c.rmq.SessionKeepRequest(nil, c.conf.RMQ.QueueToSQL()[0], map[string]interface{}{"message": itemPickingData, "function": "DeliveryDocumentItemPicking", "runtime_session_id": sessionID})
+	//		if err != nil {
+	//			err = xerrors.Errorf("rmq error: %w", err)
+	//			*errs = append(*errs, err)
+	//			return nil
+	//		}
+	//		res.Success()
+	//		if !checkResult(res) {
+	//			output.SQLUpdateResult = getBoolPtr(false)
+	//			output.SQLUpdateError = "ItemPicking Data cannot insert"
+	//			return nil
+	//		}
+	//	}
+	//	req = append(req, itemPickingData)
+	//}
 
 	if output.SQLUpdateResult == nil {
 		output.SQLUpdateResult = getBoolPtr(true)
@@ -553,7 +553,7 @@ func addressIsUpdate(address *dpfm_api_processing_formatter.AddressUpdates) bool
 func itemPickingIsUpdate(itemPicking *dpfm_api_processing_formatter.ItemPickingUpdates) bool {
 	deliveryDocument := itemPicking.DeliveryDocument
 	DeliveryDocumentItem := itemPicking.DeliveryDocumentItem
-	DeliveryDocumentItemPickingID := itemPicking.DeliveryDocumentItemPickingID
+	//DeliveryDocumentItemPickingID := itemPicking.DeliveryDocumentItemPickingID
 
 	return !(deliveryDocument == 0 || DeliveryDocumentItem == 0)
 }

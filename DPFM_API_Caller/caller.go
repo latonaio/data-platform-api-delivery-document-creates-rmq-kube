@@ -45,55 +45,55 @@ func (c *DPFMAPICaller) AsyncCreates(
 	output *dpfm_api_output_formatter.SDC,
 	log *logger.Logger,
 ) (interface{}, []error) {
-	wg := sync.WaitGroup{}
+	//wg := sync.WaitGroup{}
 	mtx := sync.Mutex{}
 	errs := make([]error, 0, 5)
-	exconfAllExist := false
+	//exconfAllExist := false
 
-	exconfFin := make(chan error)
-	subFuncFin := make(chan error)
+	//exconfFin := make(chan error)
+	//subFuncFin := make(chan error)
 
 	subfuncSDC := &sub_func_complementer.SDC{}
 
 	// 他PODへ問い合わせ
-	wg.Add(1)
-	go c.exconfProcess(&mtx, &wg, exconfFin, input, output, &exconfAllExist, accepter, &errs, log)
-	if input.APIType == "creates" {
-		go c.subfuncProcess(&mtx, &wg, subFuncFin, input, output, subfuncSDC, accepter, &errs, log)
-	} else if input.APIType == "updates" {
-		go func() { subFuncFin <- nil }()
-	} else {
-		go func() { subFuncFin <- nil }()
-	}
+	//wg.Add(1)
+	//go c.exconfProcess(&mtx, &wg, exconfFin, input, output, &exconfAllExist, accepter, &errs, log)
+	//if input.APIType == "creates" {
+	//	go c.subfuncProcess(&mtx, &wg, subFuncFin, input, output, subfuncSDC, accepter, &errs, log)
+	//} else if input.APIType == "updates" {
+	//	go func() { subFuncFin <- nil }()
+	//} else {
+	//	go func() { subFuncFin <- nil }()
+	//}
 
 	// 処理待ち
-	ticker := time.NewTicker(10 * time.Second)
-	if err := c.finWait(&mtx, exconfFin, ticker); err != nil || len(errs) != 0 {
-		if err != nil {
-			errs = append(errs, err)
-		}
-		return nil, errs
-	}
-	if !exconfAllExist {
-		mtx.Lock()
-		return nil, nil
-	}
-	wg.Wait()
+	//ticker := time.NewTicker(10 * time.Second)
+	//if err := c.finWait(&mtx, exconfFin, ticker); err != nil || len(errs) != 0 {
+	//	if err != nil {
+	//		errs = append(errs, err)
+	//	}
+	//	return nil, errs
+	//}
+	//if !exconfAllExist {
+	//	mtx.Lock()
+	//	return nil, nil
+	//}
+	//wg.Wait()
 
-	var loopCnt int
-	if input.APIType == "creates" {
-		loopCnt = len(accepter)
-	} else if input.APIType == "updates" {
-		loopCnt = 1
-	}
-	for i := 0; i < loopCnt; i++ {
-		if err := c.finWait(&mtx, subFuncFin, ticker); err != nil || len(errs) != 0 {
-			if err != nil {
-				errs = append(errs, err)
-			}
-			return subfuncSDC, errs
-		}
-	}
+	//var loopCnt int
+	//if input.APIType == "creates" {
+	//	loopCnt = len(accepter)
+	//} else if input.APIType == "updates" {
+	//	loopCnt = 1
+	//}
+	//for i := 0; i < loopCnt; i++ {
+	//	if err := c.finWait(&mtx, subFuncFin, ticker); err != nil || len(errs) != 0 {
+	//		if err != nil {
+	//			errs = append(errs, err)
+	//		}
+	//		return subfuncSDC, errs
+	//	}
+	//}
 
 	var response interface{}
 	// SQL処理

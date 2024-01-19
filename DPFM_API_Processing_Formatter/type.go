@@ -1,25 +1,29 @@
 package dpfm_api_processing_formatter
 
 type HeaderUpdates struct {
-	DeliveryDocument              int     `json:"DeliveryDocument"`
-	DeliveryDocumentDate          *string `json:"DeliveryDocumentDate"`
-	PlannedGoodsIssueDate         *string `json:"PlannedGoodsIssueDate"`
-	PlannedGoodsIssueTime         *string `json:"PlannedGoodsIssueTime"`
-	PlannedGoodsReceiptDate       *string `json:"PlannedGoodsReceiptDate"`
-	PlannedGoodsReceiptTime       *string `json:"PlannedGoodsReceiptTime"`
-	InvoiceDocumentDate           *string `json:"InvoiceDocumentDate"`
-	HeaderBillingBlockStatus      *string `json:"HeaderBillingBlockStatus"`
-	GoodsIssueOrReceiptSlipNumber *string `json:"GoodsIssueOrReceiptSlipNumber"`
-	Incoterms                     *string `json:"Incoterms"`
-	HeaderDeliveryBlockStatus     *string `json:"HeaderDeliveryBlockStatus"`
-	HeaderIssuingBlockStatus      *string `json:"HeaderIssuingBlockStatus"`
-	HeaderReceivingBlockStatus    *string `json:"HeaderReceivingBlockStatus"`
-	ExternalReferenceDocument     *string `json:"ExternalReferenceDocument"`
+	DeliveryDocument                 int     `json:"DeliveryDocument"`
+	SupplyChainRelationshipFreightID *int    `json:"SupplyChainRelationshipFreightID"`
+	FreightPartner                   *int    `json:"FreightPartner"`
+	PlannedGoodsIssueDate            *string `json:"PlannedGoodsIssueDate"`
+	PlannedGoodsIssueTime            *string `json:"PlannedGoodsIssueTime"`
+	PlannedGoodsReceiptDate          *string `json:"PlannedGoodsReceiptDate"`
+	PlannedGoodsReceiptTime          *string `json:"PlannedGoodsReceiptTime"`
+	FreightOrder                     *int    `json:"FreightOrder"`
+	InvoiceDocumentDate              *string `json:"InvoiceDocumentDate"`
+	HeaderBillingBlockStatus         *bool   `json:"HeaderBillingBlockStatus"`
+	GoodsIssueOrReceiptSlipNumber    *string `json:"GoodsIssueOrReceiptSlipNumber"`
+	Incoterms                        *string `json:"Incoterms"`
+	HeaderDeliveryBlockStatus        *bool   `json:"HeaderDeliveryBlockStatus"`
+	HeaderIssuingBlockStatus         *bool   `json:"HeaderIssuingBlockStatus"`
+	HeaderReceivingBlockStatus       *bool   `json:"HeaderReceivingBlockStatus"`
+	ExternalReferenceDocument        *string `json:"ExternalReferenceDocument"`
 }
 
 type ItemUpdates struct {
 	DeliveryDocument                 int      `json:"DeliveryDocument"`
 	DeliveryDocumentItem             int      `json:"DeliveryDocumentItem"`
+	SupplyChainRelationshipFreightID *int     `json:"SupplyChainRelationshipFreightID"`
+	FreightPartner                   *int     `json:"FreightPartner"`
 	DeliverToPlantStorageLocation    *string  `json:"DeliverToPlantStorageLocation"`
 	DeliverFromPlantStorageLocation  *string  `json:"DeliverFromPlantStorageLocation"`
 	PlannedGoodsIssueDate            *string  `json:"PlannedGoodsIssueDate"`
@@ -44,12 +48,38 @@ type ItemUpdates struct {
 	DueCalculationBaseDate           *string  `json:"DueCalculationBaseDate"`
 	PaymentDueDate                   *string  `json:"PaymentDueDate"`
 	NetPaymentDays                   *int     `json:"NetPaymentDays"`
+	FreightOrder                     *int     `json:"FreightOrder"`
 	ItemDeliveryBlockStatus          *bool    `json:"ItemDeliveryBlockStatus"`
 	ItemIssuingBlockStatus           *bool    `json:"ItemIssuingBlockStatus"`
 	ItemReceivingBlockStatus         *bool    `json:"ItemReceivingBlockStatus"`
 	ItemBillingBlockStatus           *bool    `json:"ItemBillingBlockStatus"`
 	ExternalReferenceDocument        *string  `json:"ExternalReferenceDocument"`
 	ExternalReferenceDocumentItem    *string  `json:"ExternalReferenceDocumentItem"`
+}
+
+type ItemPickingUpdates struct {
+	DeliveryDocument                                 int      `json:"DeliveryDocument"`
+	DeliveryDocumentItem                             int      `json:"DeliverToPlantStorageBin"`
+	DeliveryDocumentItemPickingID                    int      `json:"DeliverFromPlantStorageBin"`
+	DeliverToPlantStorageBin                         *string  `json:"DeliverToPlantStorageBin"`
+	DeliverToPlantKanbanContainer                    *int     `json:"DeliverToPlantKanbanContainer"`
+	DeliverFromPlantStorageBin                       *string  `json:"DeliverFromPlantStorageBin"`
+	DeliverFromPlantKanbanContainer                  *int     `json:"DeliverFromPlantKanbanContainer"`
+	DeliverToPlantPlannedPickingQuantityInBaseUnit   *float32 `json:"DeliverToPlantPlannedPickingQuantityInBaseUnit"`
+	DeliverFromPlantPlannedPickingQuantityInBaseUnit *float32 `json:"DeliverFromPlantPlannedPickingQuantityInBaseUnit"`
+	DeliverToPlantPlannedPickingDate                 *string  `json:"DeliverToPlantPlannedPickingDate"`
+	DeliverToPlantPlannedPickingTime                 *string  `json:"DeliverToPlantPlannedPickingTime"`
+	DeliverFromPlantPlannedPickingDate               *string  `json:"DeliverFromPlantPlannedPickingDate"`
+	DeliverFromPlantPlannedPickingTime               *string  `json:"DeliverFromPlantPlannedPickingTime"`
+	DeliverToPlantActualPickingQuantityInBaseUnit    *float32 `json:"DeliverToPlantActualPickingQuantityInBaseUnit"`
+	DeliverToPlantActualPickingDate                  *string  `json:"DeliverToPlantActualPickingDate"`
+	DeliverToPlantActualPickingTime                  *string  `json:"DeliverToPlantActualPickingTime"`
+	DeliverFromPlantActualPickingQuantityInBaseUnit  *float32 `json:"DeliverFromPlantActualPickingQuantityInBaseUnit"`
+	DeliverFromPlantActualPickingDate                *string  `json:"DeliverFromPlantActualPickingDate"`
+	DeliverFromPlantActualPickingTime                *string  `json:"DeliverFromPlantActualPickingTime"`
+	ExternalReferenceDocument                        *string  `json:"ExternalReferenceDocument"`
+	ExternalReferenceDocumentItem                    *string  `json:"ExternalReferenceDocumentItem"`
+	ExternalReferenceDocumentItemPickingID           *string  `json:"ExternalReferenceDocumentItemPickingID"`
 }
 
 type PartnerUpdates struct {
@@ -62,6 +92,8 @@ type PartnerUpdates struct {
 	Country                 *string `json:"Country"`
 	Language                *string `json:"Language"`
 	ExternalDocumentID      *string `json:"ExternalDocumentID"`
+	AddressID               *int    `json:"AddressID"`
+	EmailAddress            *string `json:"EmailAddress"`
 }
 
 type AddressUpdates struct {
@@ -76,24 +108,4 @@ type AddressUpdates struct {
 	Building         *string `json:"Building"`
 	Floor            *int    `json:"Floor"`
 	Room             *int    `json:"Room"`
-}
-
-type ItemPickingUpdates struct {
-	DeliveryDocument                                 int      `json:"DeliveryDocument"`
-	DeliveryDocumentItem                             int      `json:"DeliverToPlantStorageBin"`
-	DeliveryDocumentItemPickingID                    int      `json:"DeliverFromPlantStorageBin"`
-	DeliverToPlantStorageBin                         *string  `json:"DeliverToPlantStorageBin"`
-	DeliverFromPlantStorageBin                       *string  `json:"DeliverFromPlantStorageBin"`
-	DeliverToPlantPlannedPickingQuantityInBaseUnit   *float32 `json:"DeliverToPlantPlannedPickingQuantityInBaseUnit"`
-	DeliverFromPlantPlannedPickingQuantityInBaseUnit *float32 `json:"DeliverFromPlantPlannedPickingQuantityInBaseUnit"`
-	DeliverToPlantPlannedPickingDate                 *string  `json:"DeliverToPlantPlannedPickingDate"`
-	DeliverToPlantPlannedPickingTime                 *string  `json:"DeliverToPlantPlannedPickingTime"`
-	DeliverFromPlantPlannedPickingDate               *string  `json:"DeliverFromPlantPlannedPickingDate"`
-	DeliverFromPlantPlannedPickingTime               *string  `json:"DeliverFromPlantPlannedPickingTime"`
-	DeliverToPlantActualPickingQuantityInBaseUnit    *float32 `json:"DeliverToPlantActualPickingQuantityInBaseUnit"`
-	DeliverToPlantActualPickingDate                  *string  `json:"DeliverToPlantActualPickingDate"`
-	DeliverToPlantActualPickingTime                  *string  `json:"DeliverToPlantActualPickingTime"`
-	DeliverFromPlantActualPickingQuantityInBaseUnit  *float32 `json:"DeliverFromPlantActualPickingQuantityInBaseUnit"`
-	DeliverFromPlantActualPickingDate                *string  `json:"DeliverFromPlantActualPickingDate"`
-	DeliverFromPlantActualPickingTime                *string  `json:"DeliverFromPlantActualPickingTime"`
 }

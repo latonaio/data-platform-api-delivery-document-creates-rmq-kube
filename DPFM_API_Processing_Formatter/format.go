@@ -8,20 +8,22 @@ func ConvertToHeaderUpdates(header dpfm_api_input_reader.Header) *HeaderUpdates 
 	data := header
 
 	return &HeaderUpdates{
-		DeliveryDocument:              data.DeliveryDocument,
-		DeliveryDocumentDate:          data.DeliveryDocumentDate,
-		PlannedGoodsIssueDate:         data.PlannedGoodsIssueDate,
-		PlannedGoodsIssueTime:         data.PlannedGoodsIssueTime,
-		PlannedGoodsReceiptDate:       data.PlannedGoodsReceiptDate,
-		PlannedGoodsReceiptTime:       data.PlannedGoodsReceiptTime,
-		InvoiceDocumentDate:           data.InvoiceDocumentDate,
-		HeaderBillingBlockStatus:      data.HeaderBillingBlockStatus,
-		GoodsIssueOrReceiptSlipNumber: data.GoodsIssueOrReceiptSlipNumber,
-		Incoterms:                     data.Incoterms,
-		HeaderDeliveryBlockStatus:     data.HeaderDeliveryBlockStatus,
-		HeaderIssuingBlockStatus:      data.HeaderIssuingBlockStatus,
-		HeaderReceivingBlockStatus:    data.HeaderReceivingBlockStatus,
-		ExternalReferenceDocument:     data.ExternalReferenceDocument,
+		DeliveryDocument:                 data.DeliveryDocument,
+		SupplyChainRelationshipFreightID: data.SupplyChainRelationshipFreightID,
+		FreightPartner:                   data.FreightPartner,
+		PlannedGoodsIssueDate:            data.PlannedGoodsIssueDate,
+		PlannedGoodsIssueTime:            data.PlannedGoodsIssueTime,
+		PlannedGoodsReceiptDate:          data.PlannedGoodsReceiptDate,
+		PlannedGoodsReceiptTime:          data.PlannedGoodsReceiptTime,
+		FreightOrder:                     data.FreightOrder,
+		InvoiceDocumentDate:              data.InvoiceDocumentDate,
+		HeaderBillingBlockStatus:         data.HeaderBillingBlockStatus,
+		GoodsIssueOrReceiptSlipNumber:    data.GoodsIssueOrReceiptSlipNumber,
+		Incoterms:                        data.Incoterms,
+		HeaderDeliveryBlockStatus:        data.HeaderDeliveryBlockStatus,
+		HeaderIssuingBlockStatus:         data.HeaderIssuingBlockStatus,
+		HeaderReceivingBlockStatus:       data.HeaderReceivingBlockStatus,
+		ExternalReferenceDocument:        data.ExternalReferenceDocument,
 	}
 }
 
@@ -32,6 +34,8 @@ func ConvertToItemUpdates(header dpfm_api_input_reader.Header, item dpfm_api_inp
 	return &ItemUpdates{
 		DeliveryDocument:                 dataHeader.DeliveryDocument,
 		DeliveryDocumentItem:             data.DeliveryDocumentItem,
+		SupplyChainRelationshipFreightID: data.SupplyChainRelationshipFreightID,
+		FreightPartner:                   data.FreightPartner,
 		DeliverToPlantStorageLocation:    data.DeliverToPlantStorageLocation,
 		DeliverFromPlantStorageLocation:  data.DeliverFromPlantStorageLocation,
 		PlannedGoodsIssueDate:            data.PlannedGoodsIssueDate,
@@ -56,6 +60,7 @@ func ConvertToItemUpdates(header dpfm_api_input_reader.Header, item dpfm_api_inp
 		DueCalculationBaseDate:           data.DueCalculationBaseDate,
 		PaymentDueDate:                   data.PaymentDueDate,
 		NetPaymentDays:                   data.NetPaymentDays,
+		FreightOrder:                     data.FreightOrder,
 		ItemDeliveryBlockStatus:          data.ItemDeliveryBlockStatus,
 		ItemIssuingBlockStatus:           data.ItemIssuingBlockStatus,
 		ItemReceivingBlockStatus:         data.ItemReceivingBlockStatus,
@@ -79,6 +84,8 @@ func ConvertToPartnerUpdates(header dpfm_api_input_reader.Header, partner dpfm_a
 		Country:                 data.Country,
 		Language:                data.Language,
 		ExternalDocumentID:      data.ExternalDocumentID,
+		AddressID:               data.AddressID,
+		EmailAddress:            data.EmailAddress,
 	}
 }
 
@@ -101,27 +108,32 @@ func ConvertToAddressUpdates(header dpfm_api_input_reader.Header, address dpfm_a
 	}
 }
 
-func ConvertToItemPickingUpdates(header dpfm_api_input_reader.Header, address dpfm_api_input_reader.ItemPicking) *ItemPickingUpdates {
-	dataHeader := header
-	data := itemPicking
-
-	return &ItemPickingUpdates{
-		DeliveryDocument:                                 dataHeader.DeliveryDocument,
-		DeliveryDocumentItem:                             data.DeliveryDocumentItem,
-		DeliveryDocumentItemPickingID:                    data.DeliveryDocumentItemPickingID,
-		DeliverToPlantStorageBin:                         data.DeliverToPlantStorageBin,
-		DeliverFromPlantStorageBin:                       data.DeliverFromPlantStorageBin,
-		DeliverToPlantPlannedPickingQuantityInBaseUnit:   data.DeliverToPlantPlannedPickingQuantityInBaseUnit,
-		DeliverFromPlantPlannedPickingQuantityInBaseUnit: data.DeliverFromPlantPlannedPickingQuantityInBaseUnit,
-		DeliverToPlantPlannedPickingDate:                 data.DeliverToPlantPlannedPickingDate,
-		DeliverToPlantPlannedPickingTime:                 data.DeliverToPlantPlannedPickingTime,
-		DeliverFromPlantPlannedPickingDate:               data.DeliverFromPlantPlannedPickingDate,
-		DeliverFromPlantPlannedPickingTime:               data.DeliverFromPlantPlannedPickingTime,
-		DeliverToPlantActualPickingQuantityInBaseUnit:    data.DeliverToPlantActualPickingQuantityInBaseUnit,
-		DeliverToPlantActualPickingDate:                  data.DeliverToPlantActualPickingDate,
-		DeliverToPlantActualPickingTime:                  data.DeliverToPlantActualPickingTime,
-		DeliverFromPlantActualPickingQuantityInBaseUnit:  data.DeliverFromPlantActualPickingQuantityInBaseUnit,
-		DeliverFromPlantActualPickingDate:                data.DeliverFromPlantActualPickingDate,
-		DeliverFromPlantActualPickingTime:                data.DeliverFromPlantActualPickingTime,
-	}
-}
+//func ConvertToItemPickingUpdates(header dpfm_api_input_reader.Header, address dpfm_api_input_reader.ItemPicking) *ItemPickingUpdates {
+//	dataHeader := header
+//	data := itemPicking
+//
+//	return &ItemPickingUpdates{
+//		DeliveryDocument:                                 dataHeader.DeliveryDocument,
+//		DeliveryDocumentItem:                             data.DeliveryDocumentItem,
+//		DeliveryDocumentItemPickingID:                    data.DeliveryDocumentItemPickingID,
+//		DeliverToPlantStorageBin:                         data.DeliverToPlantStorageBin,
+//		DeliverToPlantKanbanContainer:                    data.DeliverToPlantKanbanContainer,
+//		DeliverFromPlantStorageBin:                       data.DeliverFromPlantStorageBin,
+//		DeliverFromPlantKanbanContainer:                  data.DeliverFromPlantKanbanContainer,
+//		DeliverToPlantPlannedPickingQuantityInBaseUnit:   data.DeliverToPlantPlannedPickingQuantityInBaseUnit,
+//		DeliverFromPlantPlannedPickingQuantityInBaseUnit: data.DeliverFromPlantPlannedPickingQuantityInBaseUnit,
+//		DeliverToPlantPlannedPickingDate:                 data.DeliverToPlantPlannedPickingDate,
+//		DeliverToPlantPlannedPickingTime:                 data.DeliverToPlantPlannedPickingTime,
+//		DeliverFromPlantPlannedPickingDate:               data.DeliverFromPlantPlannedPickingDate,
+//		DeliverFromPlantPlannedPickingTime:               data.DeliverFromPlantPlannedPickingTime,
+//		DeliverToPlantActualPickingQuantityInBaseUnit:    data.DeliverToPlantActualPickingQuantityInBaseUnit,
+//		DeliverToPlantActualPickingDate:                  data.DeliverToPlantActualPickingDate,
+//		DeliverToPlantActualPickingTime:                  data.DeliverToPlantActualPickingTime,
+//		DeliverFromPlantActualPickingQuantityInBaseUnit:  data.DeliverFromPlantActualPickingQuantityInBaseUnit,
+//		DeliverFromPlantActualPickingDate:                data.DeliverFromPlantActualPickingDate,
+//		DeliverFromPlantActualPickingTime:                data.DeliverFromPlantActualPickingTime,
+//		ExternalReferenceDocument:        				  data.ExternalReferenceDocument,
+//		ExternalReferenceDocumentItem:    				  data.ExternalReferenceDocumentItem,
+//		ExternalReferenceDocumentItemPickingID:			  data.ExternalReferenceDocumentItemPickingID,
+//	}
+//}

@@ -1,0 +1,62 @@
+{
+  "connection_key": "request",
+  "result": true,
+  "redis_key": "abcdefg",
+  "filepath": "/var/lib/aion/Data/rededge_sdc/abcdef.json",
+  "api_status_code": 200,
+  "runtime_session_id": "boi9ar543dg91ipdnspi099u231280ab0v8af0ew",
+  "business_partner": null,
+  "service_label": "DELIVERY_DOCUMENT",
+  "api_type": "updates",
+  "UsageControl": {
+    "UsageControlLess": null,
+    "Perpetual": null,
+    "Rental": null,
+    "Duration": null,
+    "DurationUnit": "",
+    "ValidityStartDate": "",
+    "ValidityStartTime": "",
+    "ValidityEndDate": "",
+    "ValidityEndTime": "",
+    "DeleteAfterValidityEnd": null,
+    "ServiceLabelRestriction": [],
+    "ApplicationRestriction": [],
+    "PurposeRestriction": [],
+    "BusinessPartnerRoleRestriction": [],
+    "LocationRestriction": {
+      "PostalCode": [],
+      "LocalSubRegion": [],
+      "LocalRegion": [],
+      "Country": [],
+      "GlobalRegion": [],
+      "TimeZone": []
+    },
+    "DataStateRestriction": [],
+    "NumberOfUsageRestriction": null,
+    "IPAddressRestriction": [],
+    "MACAddressRestriction": [],
+    "ModifyIsAllowed": null,
+    "LocalLoggingIsAllowed": null,
+    "RemoteNotificationIsAllowed": null,
+    "DestributeOnlyIfEncrypted": null,
+    "AttachPolicyWhenDestribute": null
+  },
+  "DeliveryDocument": {
+    "DeliveryDocument": 1,
+    "Item": [
+      {
+        "DeliveryDocument": 1,
+        "DeliveryDocumentItem": 1,
+        "PlannedGoodsIssueDate": "2024-01-16",
+        "PlannedGoodsIssueTime": "10:00:00",
+        "PlannedGoodsReceiptDate": "2024-01-16",
+        "PlannedGoodsReceiptTime": "11:00:00",
+        "PlannedGoodsIssueQuantity": 125
+      }
+    ]
+  },
+  "api_schema": "DPFMDeliveryDocumentCreates",
+  "accepter": [
+    "Item"
+  ]
+}
