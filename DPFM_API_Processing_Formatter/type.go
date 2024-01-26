@@ -20,41 +20,14 @@ type HeaderUpdates struct {
 }
 
 type ItemUpdates struct {
-	DeliveryDocument                 int      `json:"DeliveryDocument"`
-	DeliveryDocumentItem             int      `json:"DeliveryDocumentItem"`
-	SupplyChainRelationshipFreightID *int     `json:"SupplyChainRelationshipFreightID"`
-	FreightPartner                   *int     `json:"FreightPartner"`
-	DeliverToPlantStorageLocation    *string  `json:"DeliverToPlantStorageLocation"`
-	DeliverFromPlantStorageLocation  *string  `json:"DeliverFromPlantStorageLocation"`
-	PlannedGoodsIssueDate            *string  `json:"PlannedGoodsIssueDate"`
-	PlannedGoodsIssueTime            *string  `json:"PlannedGoodsIssueTime"`
-	PlannedGoodsReceiptDate          *string  `json:"PlannedGoodsReceiptDate"`
-	PlannedGoodsReceiptTime          *string  `json:"PlannedGoodsReceiptTime"`
-	PlannedGoodsIssueQuantity        *float32 `json:"PlannedGoodsIssueQuantity"`
-	PlannedGoodsIssueQtyInBaseUnit   *float32 `json:"PlannedGoodsIssueQtyInBaseUnit"`
-	PlannedGoodsReceiptQuantity      *float32 `json:"PlannedGoodsReceiptQuantity"`
-	PlannedGoodsReceiptQtyInBaseUnit *float32 `json:"PlannedGoodsReceiptQtyInBaseUnit"`
-	ActualGoodsIssueDate             *string  `json:"ActualGoodsIssueDate"`
-	ActualGoodsIssueTime             *string  `json:"ActualGoodsIssueTime"`
-	ActualGoodsReceiptDate           *string  `json:"ActualGoodsReceiptDate"`
-	ActualGoodsReceiptTime           *string  `json:"ActualGoodsReceiptTime"`
-	ActualGoodsIssueQuantity         *float32 `json:"ActualGoodsIssueQuantity"`
-	ActualGoodsIssueQtyInBaseUnit    *float32 `json:"ActualGoodsIssueQtyInBaseUnit"`
-	ActualGoodsReceiptQuantity       *float32 `json:"ActualGoodsReceiptQuantity"`
-	ActualGoodsReceiptQtyInBaseUnit  *float32 `json:"ActualGoodsReceiptQtyInBaseUnit"`
-	ItemGrossWeight                  *float32 `json:"ItemGrossWeight"`
-	ItemNetWeight                    *float32 `json:"ItemNetWeight"`
-	ItemWeightUnit                   *string  `json:"ItemWeightUnit"`
-	DueCalculationBaseDate           *string  `json:"DueCalculationBaseDate"`
-	PaymentDueDate                   *string  `json:"PaymentDueDate"`
-	NetPaymentDays                   *int     `json:"NetPaymentDays"`
-	FreightOrder                     *int     `json:"FreightOrder"`
-	ItemDeliveryBlockStatus          *bool    `json:"ItemDeliveryBlockStatus"`
-	ItemIssuingBlockStatus           *bool    `json:"ItemIssuingBlockStatus"`
-	ItemReceivingBlockStatus         *bool    `json:"ItemReceivingBlockStatus"`
-	ItemBillingBlockStatus           *bool    `json:"ItemBillingBlockStatus"`
-	ExternalReferenceDocument        *string  `json:"ExternalReferenceDocument"`
-	ExternalReferenceDocumentItem    *string  `json:"ExternalReferenceDocumentItem"`
+	DeliveryDocument               int      `json:"DeliveryDocument"`
+	DeliveryDocumentItem           int      `json:"DeliveryDocumentItem"`
+	PlannedGoodsIssueDate          *string  `json:"PlannedGoodsIssueDate"`
+	PlannedGoodsIssueTime          *string  `json:"PlannedGoodsIssueTime"`
+	PlannedGoodsReceiptDate        *string  `json:"PlannedGoodsReceiptDate"`
+	PlannedGoodsReceiptTime        *string  `json:"PlannedGoodsReceiptTime"`
+	PlannedGoodsIssueQuantity      *float32 `json:"PlannedGoodsIssueQuantity"`
+	PlannedGoodsIssueQtyInBaseUnit *float32 `json:"PlannedGoodsIssueQtyInBaseUnit"`
 }
 
 type ItemPickingUpdates struct {

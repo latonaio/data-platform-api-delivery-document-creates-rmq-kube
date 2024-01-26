@@ -6,7 +6,6 @@ import (
 	dpfm_api_input_reader "data-platform-api-delivery-document-creates-rmq-kube/DPFM_API_Input_Reader"
 	dpfm_api_output_formatter "data-platform-api-delivery-document-creates-rmq-kube/DPFM_API_Output_Formatter"
 	"data-platform-api-delivery-document-creates-rmq-kube/config"
-	"data-platform-api-delivery-document-creates-rmq-kube/existence_conf"
 	"data-platform-api-delivery-document-creates-rmq-kube/sub_func_complementer"
 	"encoding/json"
 	"fmt"
@@ -39,9 +38,10 @@ func main() {
 	}
 	defer rmq.Stop()
 
-	confirmor := existence_conf.NewExistenceConf(ctx, conf, rmq, db)
+	//confirmor := existence_conf.NewExistenceConf(ctx, conf, rmq, db)
 	complementer := sub_func_complementer.NewSubFuncComplementer(ctx, conf, rmq, db)
-	caller := dpfm_api_caller.NewDPFMAPICaller(conf, rmq, confirmor, complementer)
+	//caller := dpfm_api_caller.NewDPFMAPICaller(conf, rmq, confirmor, complementer)
+	caller := dpfm_api_caller.NewDPFMAPICaller(conf, rmq, complementer)
 
 	for msg := range iter {
 		start := time.Now()
