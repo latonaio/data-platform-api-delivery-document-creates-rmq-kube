@@ -1,22 +1,29 @@
 package existence_conf
 
-//type ExistenceConf struct {
-//	ctx context.Context
-//
-//	c   *config.Conf
-//	rmq *rabbitmq.RabbitmqClient
-//	db  *database.Mysql
-//}
-//
-//func NewExistenceConf(ctx context.Context, c *config.Conf, rmq *rabbitmq.RabbitmqClient, db *database.Mysql) *ExistenceConf {
-//	return &ExistenceConf{
-//		ctx: ctx,
-//		c:   c,
-//		rmq: rmq,
-//		db:  db,
-//	}
-//}
-//
+import (
+	"context"
+	"data-platform-api-delivery-document-creates-rmq-kube/config"
+	database "github.com/latonaio/golang-mysql-network-connector"
+	rabbitmq "github.com/latonaio/rabbitmq-golang-client-for-data-platform"
+)
+
+type ExistenceConf struct {
+	ctx context.Context
+
+	c   *config.Conf
+	rmq *rabbitmq.RabbitmqClient
+	db  *database.Mysql
+}
+
+func NewExistenceConf(ctx context.Context, c *config.Conf, rmq *rabbitmq.RabbitmqClient, db *database.Mysql) *ExistenceConf {
+	return &ExistenceConf{
+		ctx: ctx,
+		c:   c,
+		rmq: rmq,
+		db:  db,
+	}
+}
+
 //// Confirm returns existenceMap, allExist, err
 //func (c *ExistenceConf) Conf(data *dpfm_api_input_reader.SDC, ssdc *dpfm_api_output_formatter.SDC, accepter []string, l *logger.Logger) (allExist bool, errs []error) {
 //	var resMsg string

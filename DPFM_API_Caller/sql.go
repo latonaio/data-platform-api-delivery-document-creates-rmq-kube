@@ -6,6 +6,7 @@ import (
 	dpfm_api_output_formatter "data-platform-api-delivery-document-creates-rmq-kube/DPFM_API_Output_Formatter"
 	dpfm_api_processing_formatter "data-platform-api-delivery-document-creates-rmq-kube/DPFM_API_Processing_Formatter"
 	"data-platform-api-delivery-document-creates-rmq-kube/sub_func_complementer"
+	"fmt"
 	"sync"
 
 	"github.com/latonaio/golang-logging-library-for-data-platform/logger"
@@ -22,12 +23,65 @@ func (c *DPFMAPICaller) createSqlProcess(
 	errs *[]error,
 	log *logger.Logger,
 ) interface{} {
-	var header *[]dpfm_api_output_formatter.Header
+	var header *dpfm_api_output_formatter.Header
 	var item *[]dpfm_api_output_formatter.Item
 	var partner *[]dpfm_api_output_formatter.Partner
 	var address *[]dpfm_api_output_formatter.Address
 	var itemPicking *[]dpfm_api_output_formatter.ItemPicking
-	for _, fn := range accepter {
+
+	handleAccepter := referenceDocumentHandle(
+		input,
+		subfuncSDC,
+		accepter,
+	)
+
+	var calculateDeliveryDocumentQueryGets *sub_func_complementer.CalculateDeliveryDocumentQueryGets
+	var deliveryDocumentIssuedID int
+
+	if len(handleAccepter) > 0 {
+		calculateDeliveryDocumentQueryGets = c.CalculateDeliveryDocument(errs)
+
+		if calculateDeliveryDocumentQueryGets == nil {
+			err := xerrors.Errorf("calculateDeliveryDocumentQueryGets is nil")
+			*errs = append(*errs, err)
+			return nil
+		}
+
+		deliveryDocumentIssuedID = calculateDeliveryDocumentQueryGets.DeliveryDocumentLatestNumber + 1
+
+		subfuncSDCHeader := c.getOrdersHeader(
+			input,
+			errs,
+			deliveryDocumentIssuedID,
+		)
+
+		if len(*subfuncSDCHeader) > 0 {
+			subfuncSDC.Message.Header = &(*subfuncSDCHeader)[0]
+		}
+
+		subfuncSDCItem := c.getOrdersItem(
+			input,
+			errs,
+			deliveryDocumentIssuedID,
+		)
+
+		if len(*subfuncSDCItem) > 0 {
+			subfuncSDC.Message.Item = subfuncSDCItem
+		}
+
+		subfuncSDCPartner := c.getOrdersPartner(
+			input,
+			errs,
+			deliveryDocumentIssuedID,
+		)
+
+		if len(*subfuncSDCPartner) > 0 {
+			subfuncSDC.Message.Partner = subfuncSDCPartner
+		}
+
+	}
+
+	for _, fn := range handleAccepter {
 		switch fn {
 		case "Header":
 			header = c.headerCreateSql(nil, mtx, input, output, subfuncSDC, errs, log)
@@ -41,6 +95,14 @@ func (c *DPFMAPICaller) createSqlProcess(
 			itemPicking = c.itemPickingCreateSql(nil, mtx, input, output, subfuncSDC, errs, log)
 		default:
 
+		}
+	}
+
+	if calculateDeliveryDocumentQueryGets != nil {
+		err := c.UpdateLatestNumber(errs, deliveryDocumentIssuedID)
+		if err != nil {
+			*errs = append(*errs, err)
+			return nil
 		}
 	}
 
@@ -64,7 +126,7 @@ func (c *DPFMAPICaller) updateSqlProcess(
 	errs *[]error,
 	log *logger.Logger,
 ) interface{} {
-	var header *[]dpfm_api_output_formatter.Header
+	var header *dpfm_api_output_formatter.Header
 	var item *[]dpfm_api_output_formatter.Item
 	var partner *[]dpfm_api_output_formatter.Partner
 	var address *[]dpfm_api_output_formatter.Address
@@ -105,29 +167,28 @@ func (c *DPFMAPICaller) headerCreateSql(
 	subfuncSDC *sub_func_complementer.SDC,
 	errs *[]error,
 	log *logger.Logger,
-) *[]dpfm_api_output_formatter.Header {
+) *dpfm_api_output_formatter.Header {
 	if ctx == nil {
 		ctx = context.Background()
 	}
 	sessionID := input.RuntimeSessionID
 	// data_platform_delivery_document_header_dataの更新
-	for _, headerData := range *subfuncSDC.Message.Header {
-		res, err := c.rmq.SessionKeepRequest(ctx, c.conf.RMQ.QueueToSQL()[0], map[string]interface{}{"message": headerData, "function": "DeliveryDocumentHeader", "runtime_session_id": sessionID})
-		if err != nil {
-			err = xerrors.Errorf("rmq error: %w", err)
-			*errs = append(*errs, err)
-			return nil
-		}
-		res.Success()
-		if !checkResult(res) {
-			output.SQLUpdateResult = getBoolPtr(false)
-			output.SQLUpdateError = "Header Data cannot insert"
-			return nil
-		}
+	headerData := subfuncSDC.Message.Header
+	res, err := c.rmq.SessionKeepRequest(ctx, c.conf.RMQ.QueueToSQL()[0], map[string]interface{}{"message": headerData, "function": "DeliveryDocumentHeader", "runtime_session_id": sessionID})
+	if err != nil {
+		err = xerrors.Errorf("rmq error: %w", err)
+		*errs = append(*errs, err)
+		return nil
+	}
+	res.Success()
+	if !checkResult(res) {
+		output.SQLUpdateResult = getBoolPtr(false)
+		output.SQLUpdateError = "Header Data cannot insert"
+		return nil
+	}
 
-		if output.SQLUpdateResult == nil {
-			output.SQLUpdateResult = getBoolPtr(true)
-		}
+	if output.SQLUpdateResult == nil {
+		output.SQLUpdateResult = getBoolPtr(true)
 	}
 
 	data, err := dpfm_api_output_formatter.ConvertToHeaderCreates(subfuncSDC)
@@ -313,7 +374,7 @@ func (c *DPFMAPICaller) headerUpdateSql(
 	output *dpfm_api_output_formatter.SDC,
 	errs *[]error,
 	log *logger.Logger,
-) *[]dpfm_api_output_formatter.Header {
+) *dpfm_api_output_formatter.Header {
 	header := input.Header
 	headerData := dpfm_api_processing_formatter.ConvertToHeaderUpdates(header)
 
@@ -556,4 +617,167 @@ func itemPickingIsUpdate(itemPicking *dpfm_api_processing_formatter.ItemPickingU
 	//DeliveryDocumentItemPickingID := itemPicking.DeliveryDocumentItemPickingID
 
 	return !(deliveryDocument == 0 || DeliveryDocumentItem == 0)
+}
+
+func referenceDocumentHandle(
+	input *dpfm_api_input_reader.SDC,
+	subfuncSDC *sub_func_complementer.SDC,
+	accepter []string,
+) []string {
+	var handleAccepter []string
+
+	if input.InputParameters.ReferenceDocument != nil {
+		handleAccepter = append(handleAccepter, "Header")
+		handleAccepter = append(handleAccepter, "Item")
+		handleAccepter = append(handleAccepter, "Partner")
+	} else {
+		handleAccepter = accepter
+	}
+
+	return handleAccepter
+}
+
+func (c *DPFMAPICaller) getOrdersHeader(
+	input *dpfm_api_input_reader.SDC,
+	errs *[]error,
+	deliveryDocumentIssuedID int,
+) *[]sub_func_complementer.Header {
+	orderID := input.InputParameters.ReferenceDocument
+	orderItem := 1
+
+	rows, err := c.db.Query(
+		`SELECT *
+		FROM DataPlatformMastersAndTransactionsMysqlKube.data_platform_orders_item_data
+		WHERE (OrderID, OrderItem) = (?, ?);`, orderID, orderItem,
+	)
+	if err != nil {
+		*errs = append(*errs, err)
+		return nil
+	}
+	defer rows.Close()
+
+	data, err := dpfm_api_output_formatter.ConvertToHeaderFromOrders(rows, deliveryDocumentIssuedID)
+	if err != nil {
+		*errs = append(*errs, err)
+		return nil
+	}
+
+	return data
+}
+
+func (c *DPFMAPICaller) getOrdersItem(
+	input *dpfm_api_input_reader.SDC,
+	errs *[]error,
+	deliveryDocumentIssuedID int,
+) *[]sub_func_complementer.Item {
+	orderID := input.InputParameters.ReferenceDocument
+
+	rows, err := c.db.Query(
+		`SELECT *
+		FROM DataPlatformMastersAndTransactionsMysqlKube.data_platform_orders_item_data
+		WHERE OrderID = ?;`, orderID,
+	)
+	if err != nil {
+		*errs = append(*errs, err)
+		return nil
+	}
+	defer rows.Close()
+
+	data, err := dpfm_api_output_formatter.ConvertToItemFromOrders(rows, deliveryDocumentIssuedID)
+	if err != nil {
+		*errs = append(*errs, err)
+		return nil
+	}
+
+	return data
+}
+
+func (c *DPFMAPICaller) getOrdersPartner(
+	input *dpfm_api_input_reader.SDC,
+	errs *[]error,
+	deliveryDocumentIssuedID int,
+) *[]sub_func_complementer.Partner {
+	orderID := input.InputParameters.ReferenceDocument
+
+	rows, err := c.db.Query(
+		`SELECT *
+		FROM DataPlatformMastersAndTransactionsMysqlKube.data_platform_orders_partner_data
+		WHERE OrderID = ?;`, orderID,
+	)
+	if err != nil {
+		*errs = append(*errs, err)
+		return nil
+	}
+	defer rows.Close()
+
+	data, err := dpfm_api_output_formatter.ConvertToPartnerFromOrders(rows, deliveryDocumentIssuedID)
+	if err != nil {
+		*errs = append(*errs, err)
+		return nil
+	}
+
+	return data
+}
+
+func (c *DPFMAPICaller) CalculateDeliveryDocument(
+	errs *[]error,
+) *sub_func_complementer.CalculateDeliveryDocumentQueryGets {
+	pm := &sub_func_complementer.CalculateDeliveryDocumentQueryGets{}
+
+	rows, err := c.db.Query(
+		`SELECT *
+		FROM DataPlatformMastersAndTransactionsMysqlKube.data_platform_number_range_latest_number_data
+		WHERE (ServiceLabel, FieldNameWithNumberRange) = (?, ?);`, "DELIVERY_DOCUMENT", "DeliveryDocument",
+	)
+	if err != nil {
+		*errs = append(*errs, err)
+		return nil
+	}
+
+	for i := 0; true; i++ {
+		if !rows.Next() {
+			if i == 0 {
+				*errs = append(*errs, fmt.Errorf("'data_platform_number_range_latest_number_data'テーブルに対象のレコードが存在しません。"))
+				return nil
+			} else {
+				break
+			}
+		}
+		err = rows.Scan(
+			&pm.NumberRangeID,
+			&pm.ServiceLabel,
+			&pm.FieldNameWithNumberRange,
+			&pm.DeliveryDocumentLatestNumber,
+		)
+		if err != nil {
+			*errs = append(*errs, err)
+			return nil
+		}
+	}
+
+	return pm
+}
+
+func (c *DPFMAPICaller) UpdateLatestNumber(
+	errs *[]error,
+	deliveryDocumentIssuedID int,
+) error {
+	//rows, err := c.db.Query(
+	//	`SELECT *
+	//	FROM DataPlatformMastersAndTransactionsMysqlKube.data_platform_number_range_latest_number_data
+	//	WHERE (ServiceLabel, FieldNameWithNumberRange) = (?, ?);`, "DELIVERY_DOCUMENT", "DeliveryDocument",
+	//)
+
+	_, err := c.db.Exec(`
+			UPDATE data_platform_number_range_latest_number_data SET LatestNumber=(?)
+			WHERE (ServiceLabel, FieldNameWithNumberRange) = (?, ?);`,
+		deliveryDocumentIssuedID,
+		"DELIVERY_DOCUMENT",
+		"DeliveryDocument",
+	)
+	if err != nil {
+		return xerrors.Errorf("'data_platform_number_range_latest_number_data'テーブルの更新に失敗しました。")
+	}
+
+	return nil
 }

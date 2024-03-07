@@ -1,9 +1,8 @@
 # data-platform-api-delivery-document-creates-rmq-kube
 
-data-platform-api-delivery-document-creates-rmq-kube は、周辺業務システム　を データ連携基盤 と統合することを目的に、API で入出荷データを登録/更新するマイクロサービスです。
+data-platform-api-delivery-document-creates-rmq-kube は、周辺業務システム　を データ連携基盤 と統合することを目的に、API で入出荷データを登録するマイクロサービスです。
 
 * https://xxx.xxx.io/api/API_DELIVERY_DOCUMENT_SRV/creates/
-* https://xxx.xxx.io/api/API_DELIVERY_DOCUMENT_SRV/updates/
 
 ## 動作環境
 
@@ -16,7 +15,6 @@ data-platform-api-delivery-document-creates-rmq-kube の動作環境は、次の
 data-platform-api-delivery-document-creates-rmq-kube が対応する APIサービス は、次のものです。
 
 * APIサービス URL: https://xxx.xxx.io/api/API_DELIVERY_DOCUMENT_SRV/creates/
-* APIサービス URL: https://xxx.xxx.io/api/API_DELIVERY_DOCUMENT_SRV/updates/
 
 ## 本レポジトリ に 含まれる API名
 data-platform-api-delivery-document-creates-rmq-kube には、次の API をコールするためのリソースが含まれています。  
@@ -103,7 +101,7 @@ func (c *DPFMAPICaller) AsyncCreates(
 
 ## Output  
 本マイクロサービスでは、[golang-logging-library-for-data-platform](https://github.com/latonaio/golang-logging-library-for-data-platform) により、以下のようなデータがJSON形式で出力されます。  
-以下の sample.json の例は 入出荷 の ヘッダデータ が登録/更新された結果の JSON の例です。  
+以下の sample.json の例は 入出荷 の ヘッダデータ が登録された結果の JSON の例です。  
 以下の項目のうち、"DeliveryDocument" ～ "PlusMinusFlag" は、/DPFM_API_Output_Formatter/type.go 内 の Type Header {} による出力結果です。"cursor" ～ "time"は、golang-logging-library による 定型フォーマットの出力結果です。  
 
 ```

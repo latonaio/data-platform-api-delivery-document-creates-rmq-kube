@@ -35,7 +35,9 @@ spec:
             - name: "RMQ_SESSION_CONTROL_QUEUE"
               value: "data-platform-api-delivery-document-creates-session-control-queue"
             - name: "MYSQL_DB_NAME"
-              value: "DataPlatformCommonSettingsMysqlKube"
+              #              value: "DataPlatformCommonSettingsMysqlKube"
+              #               // TODO いったん transactions に接続するように変更
+              value: "DataPlatformMastersAndTransactionsMysqlKube"
           envFrom:
             - configMapRef:
                 name: env-config

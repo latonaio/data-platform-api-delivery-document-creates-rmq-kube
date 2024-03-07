@@ -1,0 +1,28 @@
+{
+  "connection_key": "request",
+  "result": true,
+  "redis_key": "abcdefg",
+  "filepath": "/var/lib/aion/Data/rededge_sdc/abcdef.json",
+  "api_status_code": 200,
+  "runtime_session_id": "boi9ar543dg91ipdnspi099u231280ab0v8af0ew",
+  "business_partner": null,
+  "service_label": "DELIVERY_DOCUMENT",
+  "api_type": "creates",
+  "InputParameters": {
+    "ReferenceDocument": 1,
+	"ReferenceDocumentItem": null
+	},
+    "DeliveryDocument": {
+    "DeliveryDocument": null,
+      "Item": [
+        {
+        "DeliveryDocument": null,
+        "DeliveryDocumentItem": null
+      }
+    ]
+  },
+  "api_schema": "DPFMDeliveryDocumentCreates",
+  "accepter": [
+    "All"
+  ]
+}
